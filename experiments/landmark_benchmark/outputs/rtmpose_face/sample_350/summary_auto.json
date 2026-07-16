@@ -1,0 +1,125 @@
+{
+  "model": "RTMPose-M Face6 256x256",
+  "expected_keypoints": 106,
+  "device": "cpu",
+  "manifest": "E:\\NUS_Visual_Computing\\SWS3026-Visual-Computing-Project-main-working\\experiments\\landmark_benchmark\\manifests\\sample_manifest_350.csv",
+  "config": "D:\\conda_envs\\rtmpose_face\\Lib\\site-packages\\mmpose\\.mim\\configs\\face_2d_keypoint\\rtmpose\\face6\\rtmpose-m_8xb256-120e_face6-256x256.py",
+  "checkpoint": "E:\\NUS_Visual_Computing\\SWS3026-Visual-Computing-Project-main-working\\experiments\\landmark_benchmark\\models\\rtmpose_face\\rtmpose-m_simcc-face6_pt-in1k_120e-256x256-72a37400_20230529.pth",
+  "checkpoint_sha256": "72a37400a40946db314ec8287e2e77cddc0b1f4a9e1bced3af633355cb72bd03",
+  "score_threshold": 0.2,
+  "total_samples": 350,
+  "raw_inference_successes": 350,
+  "raw_inference_failures": 0,
+  "raw_inference_success_rate": 1.0,
+  "timing_ms": {
+    "mean": 108.28842200004146,
+    "median": 107.02614999900106,
+    "p95": 122.91328000028443,
+    "min": 97.5073000008706,
+    "max": 138.37150000108522
+  },
+  "mean_keypoint_score": 0.6601948486055647,
+  "mean_visible_rate": 0.99911051212938,
+  "mean_in_bounds_rate": 0.9139353099730458,
+  "per_class": {
+    "angry": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 105.25385200024175,
+        "median": 103.66959999919345,
+        "p95": 119.01586499789116,
+        "min": 97.75420000005397,
+        "max": 131.15000000107102
+      },
+      "mean_keypoint_score": 0.6736737489700317,
+      "mean_in_bounds_rate": 0.9352830188679246
+    },
+    "disgust": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 106.07112600024266,
+        "median": 105.51505000148609,
+        "p95": 116.14648000013403,
+        "min": 98.25629999977536,
+        "max": 121.2271000003966
+      },
+      "mean_keypoint_score": 0.6231113767623901,
+      "mean_in_bounds_rate": 0.860566037735849
+    },
+    "fear": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 108.18219599976146,
+        "median": 107.41185000006226,
+        "p95": 122.18828499972005,
+        "min": 97.5073000008706,
+        "max": 132.23010000001523
+      },
+      "mean_keypoint_score": 0.655911220908165,
+      "mean_in_bounds_rate": 0.9128301886792454
+    },
+    "happy": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 107.66589800005022,
+        "median": 106.72755000086909,
+        "p95": 121.88704500040329,
+        "min": 100.41780000028666,
+        "max": 127.5327000003017
+      },
+      "mean_keypoint_score": 0.6928622555732727,
+      "mean_in_bounds_rate": 0.9343396226415095
+    },
+    "neutral": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 108.59337800015055,
+        "median": 107.69534999963071,
+        "p95": 117.66078000164268,
+        "min": 100.6390000002284,
+        "max": 126.29909999668598
+      },
+      "mean_keypoint_score": 0.6746740913391114,
+      "mean_in_bounds_rate": 0.9241509433962264
+    },
+    "sad": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 109.60374399990542,
+        "median": 108.34299999987707,
+        "p95": 123.54092999848945,
+        "min": 97.55980000045383,
+        "max": 133.79970000096364
+      },
+      "mean_keypoint_score": 0.6531673806905747,
+      "mean_in_bounds_rate": 0.9256603773584905
+    },
+    "surprise": {
+      "samples": 50,
+      "raw_inference_successes": 50,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 112.64875999993819,
+        "median": 111.19910000161326,
+        "p95": 128.6993399993662,
+        "min": 97.64090000317083,
+        "max": 138.37150000108522
+      },
+      "mean_keypoint_score": 0.6479638659954071,
+      "mean_in_bounds_rate": 0.9047169811320753
+    }
+  },
+  "important_note": "RTMPose is a top-down model and is given a full-image face bbox. Returning 106 points is only raw inference success, not proof that the landmarks are anatomically correct. Use sample_metrics_reviewed.csv for good/acceptable/wrong manual review."
+}

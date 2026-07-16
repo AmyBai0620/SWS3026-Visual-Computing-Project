@@ -1,0 +1,75 @@
+{
+  "model": "RTMPose-M Face6 256x256",
+  "device": "cpu",
+  "total_samples": 350,
+  "raw_inference_successes": 350,
+  "raw_inference_success_rate": 1.0,
+  "good": 155,
+  "acceptable": 195,
+  "wrong": 0,
+  "manual_valid": 350,
+  "manual_valid_rate": 1.0,
+  "good_rate": 0.44285714285714284,
+  "mean_in_bounds_rate": 0.9139353099730458,
+  "mean_keypoint_score": 0.6601948486055647,
+  "timing_ms": {
+    "mean": 108.28842200004146,
+    "median": 107.02614999900106,
+    "p95": 122.91328000028443,
+    "min": 97.5073000008706,
+    "max": 138.37150000108522
+  },
+  "per_class_review": {
+    "angry": {
+      "samples": 50,
+      "good": 32,
+      "acceptable": 18,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "disgust": {
+      "samples": 50,
+      "good": 20,
+      "acceptable": 30,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "fear": {
+      "samples": 50,
+      "good": 21,
+      "acceptable": 29,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "happy": {
+      "samples": 50,
+      "good": 29,
+      "acceptable": 21,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "neutral": {
+      "samples": 50,
+      "good": 21,
+      "acceptable": 29,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "sad": {
+      "samples": 50,
+      "good": 12,
+      "acceptable": 38,
+      "wrong": 0,
+      "manual_valid": 50
+    },
+    "surprise": {
+      "samples": 50,
+      "good": 20,
+      "acceptable": 30,
+      "wrong": 0,
+      "manual_valid": 50
+    }
+  },
+  "review_method": "Conservative visual inspection of all 350 overlays using 14 class-specific contact sheets, assisted by mean keypoint confidence and in-bounds rate. Acceptable samples remain usable but may include profile, crop, blur, occlusion, or inferred hidden-side landmarks.",
+  "important_note": "Because the model receives the whole image as a face bbox, raw 106-point output success must not be interpreted as perfect landmark accuracy."
+}
