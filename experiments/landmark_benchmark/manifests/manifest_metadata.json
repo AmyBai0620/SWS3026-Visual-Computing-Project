@@ -1,0 +1,31 @@
+{
+  "dataset_root_used_for_generation": "local FER-2013 train directory",
+  "seed": 42,
+  "classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "available_images_per_class": {
+    "angry": 3995,
+    "disgust": 436,
+    "fear": 4097,
+    "happy": 7215,
+    "neutral": 4965,
+    "sad": 4830,
+    "surprise": 3171
+  },
+  "samples_per_class": 50,
+  "smoke_per_class": 5,
+  "full_manifest_rows": 350,
+  "smoke_manifest_rows": 35,
+  "notes": [
+    "The 35-image smoke-test set is a subset of the 350-image set.",
+    "Teammates should use relative_path and their own local dataset root.",
+    "SHA-256 hashes verify that all teammates use identical source images."
+  ]
+}

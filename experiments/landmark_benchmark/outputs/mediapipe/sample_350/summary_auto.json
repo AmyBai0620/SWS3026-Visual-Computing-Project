@@ -1,0 +1,81 @@
+{
+  "model_name": "MediaPipe Face Mesh",
+  "model_version": "0.10.21",
+  "manifest": "E:\\NUS_Visual_Computing\\SWS3026-Visual-Computing-Project-main-working\\experiments\\landmark_benchmark\\manifests\\sample_manifest_350.csv",
+  "total_samples": 350,
+  "extract_success_count": 317,
+  "extract_success_rate": 0.9057142857142857,
+  "auto_geometry_valid_count": 317,
+  "auto_geometry_valid_rate": 0.9057142857142857,
+  "manual_landmark_valid_count": null,
+  "manual_landmark_valid_rate": null,
+  "num_landmarks": 468,
+  "mean_runtime_ms": 4.855764857160726,
+  "median_runtime_ms": 4.856349999499798,
+  "p95_runtime_ms": 6.061570000019856,
+  "max_runtime_ms": 13.98729999891657,
+  "upscale_size": 256,
+  "refine_landmarks": false,
+  "min_detection_confidence": 0.5,
+  "per_class_results": {
+    "angry": {
+      "total": 50,
+      "extract_success_count": 41,
+      "extract_success_rate": 0.82,
+      "auto_geometry_valid_count": 41,
+      "auto_geometry_valid_rate": 0.82
+    },
+    "disgust": {
+      "total": 50,
+      "extract_success_count": 43,
+      "extract_success_rate": 0.86,
+      "auto_geometry_valid_count": 43,
+      "auto_geometry_valid_rate": 0.86
+    },
+    "fear": {
+      "total": 50,
+      "extract_success_count": 46,
+      "extract_success_rate": 0.92,
+      "auto_geometry_valid_count": 46,
+      "auto_geometry_valid_rate": 0.92
+    },
+    "happy": {
+      "total": 50,
+      "extract_success_count": 49,
+      "extract_success_rate": 0.98,
+      "auto_geometry_valid_count": 49,
+      "auto_geometry_valid_rate": 0.98
+    },
+    "neutral": {
+      "total": 50,
+      "extract_success_count": 48,
+      "extract_success_rate": 0.96,
+      "auto_geometry_valid_count": 48,
+      "auto_geometry_valid_rate": 0.96
+    },
+    "sad": {
+      "total": 50,
+      "extract_success_count": 42,
+      "extract_success_rate": 0.84,
+      "auto_geometry_valid_count": 42,
+      "auto_geometry_valid_rate": 0.84
+    },
+    "surprise": {
+      "total": 50,
+      "extract_success_count": 48,
+      "extract_success_rate": 0.96,
+      "auto_geometry_valid_count": 48,
+      "auto_geometry_valid_rate": 0.96
+    }
+  },
+  "hardware": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "software_environment": {
+    "platform": "Windows-10-10.0.26100-SP0",
+    "python": "3.10.20",
+    "opencv": "4.11.0",
+    "mediapipe": "0.10.21",
+    "numpy": "1.26.4"
+  },
+  "recommend_full_run": null,
+  "notes": "Manual quality fields remain pending_review until overlays are checked."
+}
