@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Landmark benchmark local visual outputs
+experiments/landmark_benchmark/outputs/**/overlays/
+experiments/landmark_benchmark/outputs/**/contact_sheet.png
+experiments/landmark_benchmark/outputs/**/single_test/
+experiments/landmark_benchmark/outputs/**/*.zip
+
+# Downloaded model checkpoints
+experiments/landmark_benchmark/models/**/*.pth
