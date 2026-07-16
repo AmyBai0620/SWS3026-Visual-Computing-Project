@@ -448,3 +448,70 @@ manifest、runner、统计结果和少量代表性失败案例可以上传仓库
 6. 安装和实时接入风险可控。
 
 如果两个模型结果接近，则都进入全量分类实验，不能只根据小样本中 1%～2% 的差异直接下结论。
+
+
+
+## RTMPose-Face
+
+### Model and setup
+
+- Model: RTMPose-M Face6
+- Number of landmarks: 106
+- Input size: 256 × 256
+- FER-2013 input size: 48 × 48 grayscale
+- The whole FER image was used as the face bounding box
+- Benchmark device: CPU
+- MMPose version: 1.3.2
+
+### 35-sample smoke test
+
+- Raw inference success: 35/35 (100.00%)
+- Good: 20
+- Acceptable: 15
+- Wrong: 0
+- Manual valid rate: 100.00%
+- Mean inference time: 105.70 ms
+- Median inference time: 103.94 ms
+- P95 inference time: 115.21 ms
+
+### 350-sample benchmark
+
+- Raw inference success: 350/350 (100.00%)
+- Good: 155
+- Acceptable: 195
+- Wrong: 0
+- Manual valid rate: 100.00%
+- Strict good rate: 44.29%
+- Mean inference time: 108.29 ms
+- Median inference time: 107.03 ms
+- P95 inference time: 122.91 ms
+- Maximum inference time: 138.37 ms
+- Mean keypoint confidence: 0.6602
+- Mean in-bounds landmark rate: 91.39%
+
+RTMPose-Face returned 106 finite landmarks for every sample. However,
+because the whole image was supplied as the face bounding box, raw inference
+success does not necessarily mean that every predicted landmark is correct.
+
+For profile, occluded, or tightly cropped faces, RTMPose-Face may estimate
+landmarks for hidden or out-of-frame facial regions. Therefore, manual review
+and the in-bounds landmark rate should be reported together with raw inference
+success.
+
+
+## Preliminary landmark model comparison
+
+| Metric | MediaPipe Face Mesh | RTMPose-Face |
+|---|---:|---:|
+| Number of landmarks | 468 | 106 |
+| Raw success | 317/350 | 350/350 |
+| Good | 150 | 155 |
+| Acceptable | 167 | 195 |
+| Wrong | 33 | 0 |
+| Manual valid rate | 90.57% | 100.00% |
+| Mean inference time | 4.86 ms | 108.29 ms |
+| Median inference time | 4.86 ms | 107.03 ms |
+| P95 inference time | 6.06 ms | 122.91 ms |
+
+This comparison is preliminary. FAN should be evaluated using the same
+manifest before selecting the final landmark model.
