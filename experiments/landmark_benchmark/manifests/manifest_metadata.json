@@ -1,5 +1,5 @@
 {
-  "dataset_root_used_for_generation": "E:\\NUS_Visual_Computing\\project\\emotion\\data\\facial_expression_dataset\\train",
+  "dataset_root_used_for_generation": "local FER-2013 train directory",
   "seed": 42,
   "classes": [
     "angry",
