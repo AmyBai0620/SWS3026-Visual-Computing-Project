@@ -1,0 +1,83 @@
+{
+  "model": "2D FAN-4",
+  "device": "cpu",
+  "total_samples": 350,
+  "raw_inference_successes": 350,
+  "raw_inference_success_rate": 1.0,
+  "good": 174,
+  "acceptable": 170,
+  "wrong": 6,
+  "manual_valid": 344,
+  "manual_valid_rate": 0.9828571428571429,
+  "strict_good_rate": 0.49714285714285716,
+  "mean_keypoint_score": 0.7860242239066533,
+  "mean_visible_rate": 0.989201680672269,
+  "mean_in_bounds_rate": 0.9858823529411763,
+  "timing_ms": {
+    "mean": 173.67158742868924,
+    "median": 163.6404000018956,
+    "p95": 219.02687499750755,
+    "min": 149.97439999569906,
+    "max": 249.10130000353092
+  },
+  "per_class_review": {
+    "angry": {
+      "samples": 50,
+      "good": 30,
+      "acceptable": 18,
+      "wrong": 2,
+      "manual_valid": 48,
+      "manual_valid_rate": 0.96
+    },
+    "disgust": {
+      "samples": 50,
+      "good": 26,
+      "acceptable": 24,
+      "wrong": 0,
+      "manual_valid": 50,
+      "manual_valid_rate": 1.0
+    },
+    "fear": {
+      "samples": 50,
+      "good": 26,
+      "acceptable": 21,
+      "wrong": 3,
+      "manual_valid": 47,
+      "manual_valid_rate": 0.94
+    },
+    "happy": {
+      "samples": 50,
+      "good": 30,
+      "acceptable": 20,
+      "wrong": 0,
+      "manual_valid": 50,
+      "manual_valid_rate": 1.0
+    },
+    "neutral": {
+      "samples": 50,
+      "good": 23,
+      "acceptable": 27,
+      "wrong": 0,
+      "manual_valid": 50,
+      "manual_valid_rate": 1.0
+    },
+    "sad": {
+      "samples": 50,
+      "good": 15,
+      "acceptable": 34,
+      "wrong": 1,
+      "manual_valid": 49,
+      "manual_valid_rate": 0.98
+    },
+    "surprise": {
+      "samples": 50,
+      "good": 24,
+      "acceptable": 26,
+      "wrong": 0,
+      "manual_valid": 50,
+      "manual_valid_rate": 1.0
+    }
+  },
+  "review_method": "Conservative visual review of all 350 overlays using class-specific contact sheets and individual inspection of low-confidence, heavily cropped, profile, and occluded samples.",
+  "important_note": "FAN receives the whole image as an external face bounding box. Returning 68 finite landmarks and obtaining a high heatmap score do not prove anatomically correct placement."
+}

@@ -1,0 +1,122 @@
+{
+  "model": "2D FAN-4",
+  "expected_keypoints": 68,
+  "device": "cpu",
+  "manifest": "E:\\NUS_Visual_Computing\\SWS3026-Visual-Computing-Project-main-working\\experiments\\landmark_benchmark\\manifests\\sample_manifest_35.csv",
+  "score_threshold": 0.2,
+  "total_samples": 35,
+  "raw_inference_successes": 35,
+  "raw_inference_failures": 0,
+  "raw_inference_success_rate": 1.0,
+  "timing_ms": {
+    "mean": 166.2806057137329,
+    "median": 161.06129999752739,
+    "p95": 186.3011999972514,
+    "min": 155.93939999962458,
+    "max": 193.09780000185128
+  },
+  "mean_keypoint_score": 0.7690577481474196,
+  "mean_visible_rate": 0.9689075630252102,
+  "mean_in_bounds_rate": 0.9941176470588236,
+  "per_class": {
+    "angry": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 171.31529999969644,
+        "median": 163.88789999837172,
+        "p95": 185.65009999801987,
+        "min": 159.83570000025793,
+        "max": 186.1460999971314
+      },
+      "mean_keypoint_score": 0.8025595903396606,
+      "mean_in_bounds_rate": 1.0
+    },
+    "disgust": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 159.00924000088708,
+        "median": 157.77760000128183,
+        "p95": 162.32706000009784,
+        "min": 155.94100000089384,
+        "max": 162.60999999940395
+      },
+      "mean_keypoint_score": 0.827073848247528,
+      "mean_in_bounds_rate": 0.9911764705882353
+    },
+    "fear": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 158.43803999814554,
+        "median": 158.09449999869685,
+        "p95": 160.59015999780968,
+        "min": 156.9906999975501,
+        "max": 161.06129999752739
+      },
+      "mean_keypoint_score": 0.6623432338237762,
+      "mean_in_bounds_rate": 0.9941176470588236
+    },
+    "happy": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 159.37943999888375,
+        "median": 160.10919999826,
+        "p95": 160.57697999858647,
+        "min": 155.93939999962458,
+        "max": 160.68589999849792
+      },
+      "mean_keypoint_score": 0.8160063743591308,
+      "mean_in_bounds_rate": 1.0
+    },
+    "neutral": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 162.70911999890814,
+        "median": 158.40279999974882,
+        "p95": 176.49519999904442,
+        "min": 156.66849999979604,
+        "max": 180.63099999926635
+      },
+      "mean_keypoint_score": 0.8092364192008972,
+      "mean_in_bounds_rate": 0.9941176470588236
+    },
+    "sad": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 172.4229200000991,
+        "median": 173.12700000184122,
+        "p95": 176.89526000031037,
+        "min": 166.93599999780417,
+        "max": 177.3073000003933
+      },
+      "mean_keypoint_score": 0.7228876709938049,
+      "mean_in_bounds_rate": 0.9911764705882353
+    },
+    "surprise": {
+      "samples": 5,
+      "raw_inference_successes": 5,
+      "raw_inference_success_rate": 1.0,
+      "timing_ms": {
+        "mean": 180.6901799995103,
+        "median": 178.27069999839296,
+        "p95": 191.8108600009873,
+        "min": 169.17520000060904,
+        "max": 193.09780000185128
+      },
+      "mean_keypoint_score": 0.7432971000671387,
+      "mean_in_bounds_rate": 0.9882352941176471
+    }
+  },
+  "important_note": "FAN is given the whole image as an external face bounding box. Returning 68 points is only raw inference success, not proof that the landmarks are anatomically correct. FAN heatmap scores can remain high even when landmarks are visibly misplaced."
+}
