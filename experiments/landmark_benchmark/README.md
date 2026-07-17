@@ -515,3 +515,139 @@ success.
 
 This comparison is preliminary. FAN should be evaluated using the same
 manifest before selecting the final landmark model.
+
+## FAN
+
+### Model and setup
+
+- Package: `face-alignment`
+- Model: 2D FAN-4
+- Number of landmarks: 68
+- FER-2013 input size: 48 × 48 grayscale
+- Input converted to three-channel RGB
+- The whole FER image was supplied as an external face bounding box
+- FAN's internal face detector was bypassed
+- Benchmark device: CPU
+- `face-alignment`: 1.5.0
+- PyTorch: 2.1.2+cpu
+- `flip_input=False`
+- `compile=False`
+- Warm-up runs: 5
+- Diagnostic score threshold: 0.20
+
+### 35-sample smoke test
+
+Automatic results:
+
+- Raw inference success: 35/35 (100.00%)
+- Mean inference time: 166.28 ms
+- Median inference time: 161.06 ms
+- P95 inference time: 186.30 ms
+- Maximum inference time: 193.10 ms
+- Mean keypoint score: 0.7691
+- Mean in-bounds landmark rate: 99.41%
+
+Manual review:
+
+- Good: 22
+- Acceptable: 10
+- Wrong: 3
+- Manual valid: 32/35 (91.43%)
+- Strict good rate: 62.86%
+
+The main failures in the smoke test occurred under strong profile and heavy
+occlusion. In several cases, FAN returned all 68 landmarks with relatively
+high heatmap scores even though eyebrow or hidden-side landmarks were visibly
+misplaced.
+
+### 350-sample benchmark
+
+Automatic results:
+
+- Raw inference success: 350/350 (100.00%)
+- Mean inference time: 173.67 ms
+- Median inference time: 163.64 ms
+- P95 inference time: 219.03 ms
+- Maximum inference time: 249.10 ms
+- Mean keypoint score: 0.7860
+- Mean visible landmark rate: 98.92%
+- Mean in-bounds landmark rate: 98.59%
+
+Manual review:
+
+- Good: 174
+- Acceptable: 170
+- Wrong: 6
+- Manual valid: 344/350 (98.29%)
+- Strict good rate: 49.71%
+
+### Per-class manual review
+
+| Class | Good | Acceptable | Wrong | Manual valid rate |
+|---|---:|---:|---:|---:|
+| Angry | 30 | 18 | 2 | 96% |
+| Disgust | 26 | 24 | 0 | 100% |
+| Fear | 26 | 21 | 3 | 94% |
+| Happy | 30 | 20 | 0 | 100% |
+| Neutral | 23 | 27 | 0 | 100% |
+| Sad | 15 | 34 | 1 | 98% |
+| Surprise | 24 | 26 | 0 | 100% |
+
+The six manually invalid samples were:
+
+- `angry_001`
+- `angry_032`
+- `fear_002`
+- `fear_020`
+- `fear_034`
+- `sad_005`
+
+The main FAN failure modes were:
+
+- eyebrow landmarks displaced onto the forehead under strong profile;
+- landmarks following a hand or hair instead of visible facial anatomy;
+- unreliable hidden-side landmarks under severe occlusion;
+- scattered landmarks under heavy blur;
+- high heatmap scores despite visibly incorrect landmark placement.
+
+Raw inference success therefore means only that FAN returned 68 finite
+landmarks. It must not be interpreted as proof that the landmarks are
+anatomically correct.
+
+## Three-model comparison
+
+| Metric | MediaPipe Face Mesh | RTMPose-Face | FAN |
+|---|---:|---:|---:|
+| Number of landmarks | 468 | 106 | 68 |
+| Raw inference success | 317/350 | 350/350 | 350/350 |
+| Good | 150 | 155 | 174 |
+| Acceptable | 167 | 195 | 170 |
+| Wrong | 33 | 0 | 6 |
+| Manual valid | 317/350 | 350/350 | 344/350 |
+| Manual valid rate | 90.57% | 100.00% | 98.29% |
+| Strict good rate | 42.86% | 44.29% | 49.71% |
+| Mean CPU time | 4.86 ms | 108.29 ms | 173.67 ms |
+| Median CPU time | 4.86 ms | 107.03 ms | 163.64 ms |
+| P95 CPU time | 6.06 ms | 122.91 ms | 219.03 ms |
+
+### Preliminary interpretation
+
+- **MediaPipe Face Mesh** is by far the fastest model and is the easiest
+  candidate for real-time deployment, but it produces empty results on some
+  difficult FER images.
+- **RTMPose-Face** provides the highest manual valid rate and avoids empty
+  outputs, while remaining faster than FAN. However, it may estimate hidden or
+  out-of-frame landmarks because the whole image is supplied as a face box.
+- **FAN** produces the highest number of strictly good samples, but it is the
+  slowest CPU model and still produces several anatomically incorrect results
+  under severe profile, blur, and occlusion.
+
+This comparison remains preliminary. The models have different landmark
+definitions and different failure behavior. In particular, MediaPipe performs
+its own face detection, whereas RTMPose-Face and FAN were supplied with the
+whole FER image as an external bounding box. Raw success rates should therefore
+not be compared without manual validity and visual-quality results.
+
+The next stage should evaluate the selected one or two candidates using the
+same train, validation, and test split and the same downstream expression
+classifier.
