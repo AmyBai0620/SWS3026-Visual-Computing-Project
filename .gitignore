@@ -225,3 +225,6 @@ experiments/landmark_benchmark/outputs/**/*.zip
 
 # Downloaded model checkpoints
 experiments/landmark_benchmark/models/**/*.pth
+
+# FER-2013 raw images (re-download from Kaggle: msambare/fer2013)
+expert/facial_expression_dataset/
