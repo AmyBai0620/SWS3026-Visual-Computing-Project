@@ -1,0 +1,4 @@
+config           id switches  median step px
+A naive                    0            5.75
+B +continuity              0            5.75
+C +smoothing               0            4.91
