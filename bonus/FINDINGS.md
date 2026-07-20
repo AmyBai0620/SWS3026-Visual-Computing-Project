@@ -1,11 +1,5 @@
 # Bonus Level Task 1 — 实验结论与答辩讲稿
 
-> 对标评分细则第 11–12 题。本文件既是报告章节,也是答辩口头讲解的底稿。
-> 配套素材:`task1_compare.png`(before/after 对比图)、`task1_stats.txt`、`task1_ablation.txt`。
-> 运行环境:conda 环境 **`vcwork`**(base 未装 ultralytics),ultralytics 8.3.248,torch 2.7.1 **CPU 版**。
-
----
-
 ## 0. 流水线概览(一句话背景)
 
 Task 1 的目标是把参考视频里的舞者姿态稳定地提取出来。检测主干沿用官方示例给的 **YOLOv8n-pose**,输出 COCO-17 关键点。我们没有换模型,而是在它输出之后补了一层后处理:
