@@ -1,0 +1,9 @@
+{
+  "manifest": "experiments\\expression_classification\\manifests\\official_protocol_manifest.csv",
+  "dataset_root": "expert\\facial_expression_dataset",
+  "api": "mp.solutions.face_detection.FaceDetection",
+  "resize": "48px grayscale -> 256x256 INTER_CUBIC -> RGB",
+  "min_detection_confidence": 0.5,
+  "mediapipe_version": "0.10.21",
+  "resume": true
+}

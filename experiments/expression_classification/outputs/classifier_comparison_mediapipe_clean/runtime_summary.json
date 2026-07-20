@@ -1,0 +1,10 @@
+{
+  "lbf_training_seconds": 17.129956099999617,
+  "rtmpose_training_seconds": 27.40924300000006,
+  "lbf_test_inference_seconds": 0.021948899999188143,
+  "rtmpose_test_inference_seconds": 0.04708559999926365,
+  "historical_extraction_mean_seconds_per_image": {
+    "LBF": 0.023144332384880995,
+    "RTMPose": 0.3955089669629776
+  }
+}

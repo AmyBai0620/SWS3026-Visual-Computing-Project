@@ -1,0 +1,52 @@
+{
+  "class_counts": {
+    "angry": 4360,
+    "disgust": 418,
+    "fear": 4586,
+    "happy": 8629,
+    "neutral": 5957,
+    "sad": 5448,
+    "surprise": 3562
+  },
+  "disgust_retention": [
+    {
+      "class_name": "disgust",
+      "excluded_rows": 15,
+      "leakage_safe_rows": 111,
+      "retained_rows": 96,
+      "retention_rate": 0.8648648648648649,
+      "split": "test"
+    },
+    {
+      "class_name": "disgust",
+      "excluded_rows": 59,
+      "leakage_safe_rows": 328,
+      "retained_rows": 269,
+      "retention_rate": 0.8201219512195121,
+      "split": "train"
+    },
+    {
+      "class_name": "disgust",
+      "excluded_rows": 4,
+      "leakage_safe_rows": 57,
+      "retained_rows": 53,
+      "retention_rate": 0.9298245614035088,
+      "split": "val"
+    }
+  ],
+  "excluded_all_mediapipe_not_detected": true,
+  "excluded_rows": 2151,
+  "expected_retained_rows": 32960,
+  "leakage_safe_path_or_hash_differs_from_official_rows": 27299,
+  "leakage_safe_policy_preserved": true,
+  "note": "No-detection is a reproducible face-detection criterion, not proof that an excluded source is semantically invalid. Leakage-safe path/hash fields are preserved; official path/hash fields are recorded for existing-array provenance.",
+  "protocol": "MediaPipe-filtered leakage-safe dataset",
+  "retained_all_mediapipe_detected": true,
+  "retained_rows": 32960,
+  "source_leakage_safe_rows": 35111,
+  "split_counts": {
+    "test": 6733,
+    "train": 22300,
+    "val": 3927
+  }
+}
