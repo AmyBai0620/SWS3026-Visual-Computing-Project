@@ -1,0 +1,9 @@
+{
+  "rows_written": 35887,
+  "face_detected": 33676,
+  "no_detection": 2211,
+  "processing_errors": 0,
+  "mean_ms": 5.02187297628647,
+  "median_ms": 3.0224000001908,
+  "p95_ms": 14.3666999997549
+}

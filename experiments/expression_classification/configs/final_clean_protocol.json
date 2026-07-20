@@ -1,0 +1,10 @@
+{
+  "protocol_name": "MediaPipe-filtered leakage-safe dataset",
+  "manifest_paths": {"official": "experiments/expression_classification/manifests/official_protocol_manifest.csv", "leakage_safe": "experiments/expression_classification/manifests/leakage_safe_manifest.csv", "final_cleaned": "experiments/expression_classification/manifests/mediapipe_filtered_leakage_safe_manifest.csv"},
+  "class_order": ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"],
+  "random_seed": 42,
+  "mediapipe_face_detection": {"version": "0.10.21", "model_selection": 0, "min_detection_confidence": 0.5, "input": "grayscale image, cubic resize to 256x256, then RGB"},
+  "features": {"lbf_dimension": 136, "rtmpose": "212 normalized coordinate values plus 106 raw confidence values", "rtmpose_dimension": 318},
+  "classifier": {"preprocessing": "StandardScaler fitted on cleaned training split only", "type": "LogisticRegression", "C": 1, "class_weight": "balanced", "solver": "lbfgs", "max_iter": 2000, "random_state": 42},
+  "expected_counts": {"splits": {"train": 22300, "val": 3927, "test": 6733, "total": 32960}, "classes": {"angry": 4360, "disgust": 418, "fear": 4586, "happy": 8629, "neutral": 5957, "sad": 5448, "surprise": 3562}}
+}

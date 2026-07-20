@@ -1,0 +1,118 @@
+{
+  "seed": 42,
+  "validation_ratio": 0.15,
+  "validation_target_ratio": 0.15,
+  "stratified": true,
+  "class_order": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "dataset_root_layout": "train/<class> and test/<class>",
+  "source_total_count": 35887,
+  "source_train_count": 28709,
+  "source_test_count": 7178,
+  "eligible_train_count": 27933,
+  "excluded_train_test_duplicate_count": 703,
+  "excluded_train_label_conflict_count": 73,
+  "excluded_train_label_conflict_group_count": 30,
+  "final_train_count": 23746,
+  "final_val_count": 4187,
+  "final_test_count": 7178,
+  "final_total_count": 35111,
+  "per_split_class_counts": {
+    "train": {
+      "angry": 3285,
+      "disgust": 328,
+      "fear": 3375,
+      "happy": 6083,
+      "neutral": 4174,
+      "sad": 4052,
+      "surprise": 2449
+    },
+    "val": {
+      "angry": 579,
+      "disgust": 57,
+      "fear": 595,
+      "happy": 1073,
+      "neutral": 736,
+      "sad": 715,
+      "surprise": 432
+    },
+    "test": {
+      "angry": 958,
+      "disgust": 111,
+      "fear": 1024,
+      "happy": 1774,
+      "neutral": 1233,
+      "sad": 1247,
+      "surprise": 831
+    }
+  },
+  "validation_target_counts": {
+    "angry": 579,
+    "disgust": 57,
+    "fear": 595,
+    "happy": 1073,
+    "neutral": 736,
+    "sad": 715,
+    "surprise": 432
+  },
+  "validation_achieved_counts": {
+    "angry": 579,
+    "disgust": 57,
+    "fear": 595,
+    "happy": 1073,
+    "neutral": 736,
+    "sad": 715,
+    "surprise": 432
+  },
+  "duplicate_policy": {
+    "official_test_preserved": true,
+    "train_files_matching_test_content_excluded": true,
+    "train_sha256_groups_split_across_train_and_val": false,
+    "conflicting_label_train_sha256_groups_excluded": true,
+    "within_split_duplicate_content_allowed_by_default": true
+  },
+  "group_aware_split": true,
+  "manifest_sha256": "ce1670d3f280c36a6eee0d9298d74e4a8cc3525093dd2a375af861a2f0a7281f",
+  "duplicate_audit_sha256": "",
+  "git_commit": "c0a10686f3b766ee40e83a0e3118c22dfac18b6e",
+  "generation_timestamp_utc": "2026-07-19T14:56:54.363351+00:00",
+  "python_version": "3.14.3",
+  "generator_script_path": "experiments/expression_classification/scripts/create_full_manifest.py",
+  "generation_command": "python 'experiments\\expression_classification\\scripts\\create_full_manifest.py' --dataset-root 'expert\\facial_expression_dataset\\facial_expression_dataset' --output-manifest 'experiments\\expression_classification\\manifests\\leakage_safe_manifest.csv' --metadata-output 'experiments\\expression_classification\\manifests\\leakage_safe\\metadata.json' --validation-ratio 0.15 --seed 42 --overwrite",
+  "image_extension_policy": [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".bmp",
+    ".pgm",
+    ".webp"
+  ],
+  "sample_id_convention": "<split>_<class_name>_<zero-padded 1-based index within final deterministic split/class ordering>",
+  "validation_rounding_rule": "floor(eligible_class_count * validation_ratio) separately for each class",
+  "duplicate_filename_count": 2,
+  "duplicate_filename_examples": {
+    "Training_8475486.jpg": [
+      "train/angry/Training_8475486.jpg",
+      "train/surprise/Training_8475486.jpg"
+    ],
+    "Training_52789098.jpg": [
+      "train/neutral/Training_52789098.jpg",
+      "train/surprise/Training_52789098.jpg"
+    ]
+  },
+  "runtime_seconds": 36.265567,
+  "notes": [
+    "All original test files are preserved as final test entries.",
+    "Any original train file whose SHA-256 appears in the original test split is excluded from both final train and final val.",
+    "Remaining original-train SHA-256 groups are assigned wholly to final train or final val.",
+    "Remaining original-train SHA-256 groups with conflicting class labels are excluded.",
+    "Final total may be lower than the raw source total because excluded train files are documented rather than silently dropped."
+  ]
+}

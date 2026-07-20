@@ -1,0 +1,95 @@
+{
+  "conflicting_label_group_warning_count": 39,
+  "duplicate_filename_count": 2,
+  "duplicate_filename_examples": {
+    "Training_52789098.jpg": [
+      "train/neutral/Training_52789098.jpg",
+      "train/surprise/Training_52789098.jpg"
+    ],
+    "Training_8475486.jpg": [
+      "train/angry/Training_8475486.jpg",
+      "train/surprise/Training_8475486.jpg"
+    ]
+  },
+  "final_test_count": 7178,
+  "final_total_count": 35887,
+  "final_train_count": 24406,
+  "final_val_count": 4303,
+  "inherited_train_test_overlap_warning_count": 531,
+  "manifest_sha256": "082a630660d554a2102c7a061d7e902d2db1ac496a1e13b40c69f03ef79c113b",
+  "per_source_split_class_counts": {
+    "test": {
+      "angry": 958,
+      "disgust": 111,
+      "fear": 1024,
+      "happy": 1774,
+      "neutral": 1233,
+      "sad": 1247,
+      "surprise": 831
+    },
+    "train": {
+      "angry": 3995,
+      "disgust": 436,
+      "fear": 4097,
+      "happy": 7215,
+      "neutral": 4965,
+      "sad": 4830,
+      "surprise": 3171
+    }
+  },
+  "per_split_class_counts": {
+    "test": {
+      "angry": 958,
+      "disgust": 111,
+      "fear": 1024,
+      "happy": 1774,
+      "neutral": 1233,
+      "sad": 1247,
+      "surprise": 831
+    },
+    "train": {
+      "angry": 3396,
+      "disgust": 371,
+      "fear": 3483,
+      "happy": 6133,
+      "neutral": 4221,
+      "sad": 4106,
+      "surprise": 2696
+    },
+    "val": {
+      "angry": 599,
+      "disgust": 65,
+      "fear": 614,
+      "happy": 1082,
+      "neutral": 744,
+      "sad": 724,
+      "surprise": 475
+    }
+  },
+  "policy": "official_protocol",
+  "seed": 42,
+  "source_test_count": 7178,
+  "source_total_count": 35887,
+  "source_train_count": 28709,
+  "validation_achieved_counts": {
+    "angry": 599,
+    "disgust": 65,
+    "fear": 614,
+    "happy": 1082,
+    "neutral": 744,
+    "sad": 724,
+    "surprise": 475
+  },
+  "validation_ratio": 0.15,
+  "validation_target_counts": {
+    "angry": 599,
+    "disgust": 65,
+    "fear": 614,
+    "happy": 1082,
+    "neutral": 744,
+    "sad": 724,
+    "surprise": 475
+  },
+  "warning_count": 570,
+  "warning_csv_sha256": "c1344d6756092ed4435181b3c5a82cd7bba5b140cdbe6818b369d44165d0bf5b"
+}
