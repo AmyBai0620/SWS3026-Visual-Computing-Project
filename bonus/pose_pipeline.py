@@ -210,6 +210,23 @@ class PoseTracker:
 # ----------------------------------------------------------------------
 # rendering
 # ----------------------------------------------------------------------
+def draw_skeleton(canvas, xy, valid, color_line=(0, 255, 0),
+                  color_point=(0, 0, 255), radius=5):
+    """Draw a skeleton in place from raw (17,2) keypoints + (17,) validity.
+
+    Shared by the live pipeline (draw_pose) and by just_dance.py, which draws
+    the precomputed reference skeleton straight from cached arrays.
+    """
+    pts = np.asarray(xy).astype(int)
+    for a, b in SKELETON:
+        if valid[a] and valid[b]:
+            cv2.line(canvas, tuple(pts[a]), tuple(pts[b]), color_line, 2)
+    for i in range(NUM_KEYPOINTS):
+        if valid[i]:
+            cv2.circle(canvas, tuple(pts[i]), radius, color_point, -1)
+    return canvas
+
+
 def draw_pose(frame, res, show_frame=True, color_line=(0, 255, 0),
               color_point=(0, 0, 255), show_bbox=False):
     """Draw one PoseResult. Invalid keypoints and their bones are skipped."""
@@ -218,15 +235,7 @@ def draw_pose(frame, res, show_frame=True, color_line=(0, 255, 0),
     if not res.found:
         return canvas
 
-    pts = res.xy.astype(int)
-
-    for a, b in SKELETON:
-        if res.valid[a] and res.valid[b]:
-            cv2.line(canvas, tuple(pts[a]), tuple(pts[b]), color_line, 2)
-
-    for i in range(NUM_KEYPOINTS):
-        if res.valid[i]:
-            cv2.circle(canvas, tuple(pts[i]), 5, color_point, -1)
+    draw_skeleton(canvas, res.xy, res.valid, color_line, color_point)
 
     if show_bbox and res.bbox is not None:
         x1, y1, x2, y2 = (int(v) for v in res.bbox)
