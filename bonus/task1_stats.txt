@@ -1,8 +1,0 @@
-frames processed          : 550
-frames with 0 people      : 92
-frames with >1 person     : 191
-max people in a frame     : 2
-identity switches (>200px): 0
-median keypoint step (px) : 4.91   [EMA alpha=0.6]
-inference mean / p95 (ms) : 54.2 / 60.3
-achievable fps            : 18.4   (video is 30 fps)

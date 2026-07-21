@@ -228,3 +228,6 @@ experiments/landmark_benchmark/models/**/*.pth
 
 # FER-2013 raw images (re-download from Kaggle: msambare/fer2013)
 expert/facial_expression_dataset/
+
+# Bonus reference/demo videos (kept out of git; share via drive)
+bonus/video/*.mp4

@@ -1,0 +1,5 @@
+video: dance_examle_4 (1804x1050)  frames<= 531  switch threshold 313px
+config           id switches  median step px
+A naive                   41            6.68
+B +continuity              0            6.25
+C +smoothing               0            4.95

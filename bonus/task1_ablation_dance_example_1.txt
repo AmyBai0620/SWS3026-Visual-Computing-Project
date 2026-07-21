@@ -1,3 +1,4 @@
+video: dance_example_1 (1280x720)  frames<= 550  switch threshold 220px
 config           id switches  median step px
 A naive                    0            5.75
 B +continuity              0            5.75

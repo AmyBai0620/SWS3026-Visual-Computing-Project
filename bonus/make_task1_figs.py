@@ -1,15 +1,22 @@
 """Build the before/after figures and the numbers quoted in FINDINGS.md.
 
-Runs the reference video twice over the same frame range:
+Runs a reference video twice over the same frame range:
   * "before" = the original danceapp.py drawing (all people, no filtering)
   * "after"  = PoseTracker (main dancer, confidence filtering, EMA smoothing)
 
-Outputs
-  task1_compare.png        side-by-side panels at a few representative frames
-  task1_stats.txt          people counts, selection stability, jitter, timing
+Usage
+  python make_task1_figs.py [name] [frames]
+    name    video stem, e.g. dance_example_2 (default dance_example_1).
+            looked up in ./ then ./video/
+    frames  comma-separated shot frames, e.g. 25,195,525,660
+
+Outputs (suffixed with the video stem)
+  task1_compare_<name>.png   side-by-side panels at a few representative frames
+  task1_stats_<name>.txt      people counts, selection stability, jitter, timing
 """
 
 import os
+import sys
 
 import cv2
 import numpy as np
@@ -18,15 +25,25 @@ from ultralytics import YOLO
 from pose_pipeline import PoseTracker, draw_pose, draw_all_poses_raw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VIDEO = os.path.join(HERE, "dance_example_1.mp4")
 MODEL = os.path.join(HERE, "yolov8n-pose.pt")
 
-# Frames chosen from a prior sweep: one clean single-dancer frame, then three
-# frames where the detector also fires on the curtain/plant on the right.
-SHOT_FRAMES = [274, 412, 481, 549]
-LAST_FRAME = max(SHOT_FRAMES)
+# Per-video demo frames. Chosen from a sweep for frames that best show the
+# difference between "draw everyone" and "main dancer only".
+SHOT_PRESETS = {
+    "dance_example_1": [274, 412, 481, 549],   # single dancer + curtain false-positive
+    "dance_example_2": [25, 195, 525, 660],    # main dancer + background bystanders
+    "dance_examle_4": [70, 175, 355, 530],     # 5-7 person group dance
+}
 
 PANEL_W = 480
+
+
+def resolve_video(name):
+    for cand in (os.path.join(HERE, name + ".mp4"),
+                 os.path.join(HERE, "video", name + ".mp4")):
+        if os.path.exists(cand):
+            return cand
+    raise SystemExit(f"video not found for '{name}'")
 
 
 def label(img, text, color=(255, 255, 255)):
@@ -42,12 +59,21 @@ def resize_panel(img):
 
 
 def main():
+    name = sys.argv[1] if len(sys.argv) > 1 else "dance_example_1"
+    video = resolve_video(name)
+    shot_frames = ([int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2
+                   else SHOT_PRESETS.get(name, [0, 30, 60, 90]))
+    last_frame = max(shot_frames)
+
     model = YOLO(MODEL)
     tracker = PoseTracker(MODEL)
 
-    cap = cv2.VideoCapture(VIDEO)
+    cap = cv2.VideoCapture(video)
     if not cap.isOpened():
-        raise SystemExit(f"cannot open {VIDEO}")
+        raise SystemExit(f"cannot open {video}")
+    fw = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    fh = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    switch_px = 0.15 * np.hypot(fw, fh)   # scale-independent identity-switch threshold
 
     shots = {}
     people_per_frame = []
@@ -55,7 +81,7 @@ def main():
     inf_times = []
     smoothed_track = []    # selected keypoints per frame, for jitter stats
 
-    for fi in range(LAST_FRAME + 1):
+    for fi in range(last_frame + 1):
         ret, frame = cap.read()
         if not ret:
             break
@@ -67,7 +93,7 @@ def main():
                        ((res.bbox[0] + res.bbox[2]) / 2, (res.bbox[1] + res.bbox[3]) / 2))
         smoothed_track.append((res.xy.copy(), res.valid.copy()) if res.found else None)
 
-        if fi in SHOT_FRAMES:
+        if fi in shot_frames:
             raw_result = model(frame, conf=0.3, imgsz=640, verbose=False)[0]
             before = draw_all_poses_raw(frame, raw_result)
             after = draw_pose(frame, res, show_bbox=True)
@@ -81,12 +107,12 @@ def main():
 
     # ---- figure -------------------------------------------------------
     rows = []
-    for fi in SHOT_FRAMES:
+    for fi in shot_frames:
         if fi in shots:
             rows.append(np.hstack(shots[fi]))
     if rows:
         grid = np.vstack(rows)
-        out_png = os.path.join(HERE, "task1_compare.png")
+        out_png = os.path.join(HERE, f"task1_compare_{name}.png")
         cv2.imwrite(out_png, grid)
         print(f"wrote {out_png}  ({grid.shape[1]}x{grid.shape[0]})")
 
@@ -98,7 +124,7 @@ def main():
     jumps = 0
     for a, b in zip(centers, centers[1:]):
         if a is not None and b is not None:
-            if np.hypot(b[0] - a[0], b[1] - a[1]) > 200:
+            if np.hypot(b[0] - a[0], b[1] - a[1]) > switch_px:
                 jumps += 1
 
     # jitter: median per-frame displacement of jointly-valid keypoints
@@ -115,11 +141,12 @@ def main():
     smooth_jitter = median_step(smoothed_track)
 
     lines = [
+        f"video                     : {name}  ({fw}x{fh})",
         f"frames processed          : {len(people)}",
         f"frames with 0 people      : {int((people == 0).sum())}",
         f"frames with >1 person     : {int((people > 1).sum())}",
         f"max people in a frame     : {int(people.max())}",
-        f"identity switches (>200px): {jumps}",
+        f"identity switches (>{switch_px:.0f}px): {jumps}",
         f"median keypoint step (px) : {smooth_jitter:.2f}   [EMA alpha=0.6]",
         f"inference mean / p95 (ms) : {inf.mean():.1f} / {np.percentile(inf, 95):.1f}",
         f"achievable fps            : {1000 / inf.mean():.1f}   (video is 30 fps)",
@@ -127,7 +154,7 @@ def main():
     text = "\n".join(lines)
     print(text)
 
-    with open(os.path.join(HERE, "task1_stats.txt"), "w", encoding="utf-8") as f:
+    with open(os.path.join(HERE, f"task1_stats_{name}.txt"), "w", encoding="utf-8") as f:
         f.write(text + "\n")
 
 

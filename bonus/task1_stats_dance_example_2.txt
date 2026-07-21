@@ -1,0 +1,9 @@
+video                     : dance_example_2  (610x1082)
+frames processed          : 661
+frames with 0 people      : 0
+frames with >1 person     : 588
+max people in a frame     : 7
+identity switches (>186px): 2
+median keypoint step (px) : 4.80   [EMA alpha=0.6]
+inference mean / p95 (ms) : 67.9 / 93.4
+achievable fps            : 14.7   (video is 30 fps)
