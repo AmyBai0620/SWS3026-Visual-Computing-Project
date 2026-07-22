@@ -31,7 +31,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageTk
 
-from pose_pipeline import PoseTracker, draw_skeleton
+from pose_pipeline import PoseTracker, draw_skeleton, fit_letterbox
 from pose_score import PoseScorer, TIER_POINTS, scorable
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -112,6 +112,8 @@ class JustDanceApp:
         self.running_cam = False
         self.dance_active = False
         self.t_play = 0.0            # current reference time, drives scoring
+        self.speed = 1.0            # reference playback speed (set at Start Dance)
+        self.speed_var = tk.StringVar(value="1.0x")
 
         self.q = queue.Queue(maxsize=4)
 
@@ -127,6 +129,8 @@ class JustDanceApp:
         tk.Button(ctrl, text="Start Webcam", command=self.start_cam).pack(side=tk.LEFT, padx=4)
         tk.Button(ctrl, text="Start Dance", command=self.start_dance).pack(side=tk.LEFT, padx=4)
         tk.Button(ctrl, text="Stop Dance", command=self.stop_dance).pack(side=tk.LEFT, padx=4)
+        tk.Label(ctrl, text="Speed").pack(side=tk.LEFT, padx=(10, 2))
+        tk.OptionMenu(ctrl, self.speed_var, "1.0x", "0.75x", "0.5x").pack(side=tk.LEFT)
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self._pump()
@@ -142,6 +146,7 @@ class JustDanceApp:
             return
         if not self.running_cam:
             self.start_cam()
+        self.speed = float(self.speed_var.get().rstrip("x"))
         self.scorer.reset()
         self.dance_active = True
         threading.Thread(target=self.reference_loop, daemon=True).start()
@@ -159,28 +164,35 @@ class JustDanceApp:
     def reference_loop(self):
         cap = cv2.VideoCapture(self.ref_video)
         n = len(self.ref_xy)
+        fps = self.ref_fps
+        speed = max(0.1, self.speed)   # <1 = slow motion, so a learner can keep up
         start = time.perf_counter()
-        pos = 0                       # next frame index held by the decoder
-        while self.dance_active:
-            target = int((time.perf_counter() - start) * self.ref_fps)
-            if target >= n:
-                break
-            # advance sequentially to the wall-clock target (skip, don't seek)
-            while pos < target:
-                if not cap.grab():
-                    target = pos
-                    break
-                pos += 1
+        pos = 0                        # index of the next frame to show
+        while self.dance_active and pos < n:
+            # Wall-clock time this frame is due. Without this wait the loop --
+            # which does NO inference, it uses precomputed skeletons -- would
+            # spin far faster than the video's fps and fast-forward the dance.
+            due = start + pos / (fps * speed)
+            now = time.perf_counter()
+            if now < due:
+                time.sleep(due - now)
+
             ret, frame = cap.read()
             if not ret:
                 break
-            idx = min(pos, n - 1)
-            pos += 1
-            self.t_play = float(self.ref_t[idx])
-            draw_skeleton(frame, self.ref_xy[idx], self.ref_valid[idx],
+            self.t_play = float(self.ref_t[pos])   # reference seconds; scorer aligns here
+            draw_skeleton(frame, self.ref_xy[pos], self.ref_valid[pos],
                           color_line=(0, 220, 0), color_point=(0, 0, 255))
             self._emit(self.label_ref, frame)
-            time.sleep(0.003)
+            pos += 1
+
+            # If decoding/drawing fell behind, skip frames to catch back up so
+            # playback stays on the clock instead of drifting slow.
+            while (pos < n and
+                   time.perf_counter() - (start + pos / (fps * speed)) > 1.0 / fps):
+                if not cap.grab():
+                    break
+                pos += 1
         cap.release()
         self.dance_active = False
         self._show_summary()
@@ -231,8 +243,9 @@ class JustDanceApp:
 
     # ---------------- Tk plumbing ----------------
     def _emit(self, label, frame_bgr):
-        rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(rgb).resize((DISPLAY_W, DISPLAY_H))
+        fitted = fit_letterbox(frame_bgr, DISPLAY_W, DISPLAY_H)
+        rgb = cv2.cvtColor(fitted, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(rgb)
         try:
             self.q.put_nowait((label, img))
         except queue.Full:

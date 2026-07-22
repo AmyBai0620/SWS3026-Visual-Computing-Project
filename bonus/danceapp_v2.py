@@ -23,7 +23,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageTk
 
-from pose_pipeline import PoseTracker, draw_pose
+from pose_pipeline import PoseTracker, draw_pose, fit_letterbox
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL = os.path.join(HERE, "yolov8n-pose.pt")
@@ -57,7 +57,6 @@ class PoseApp:
         if not os.path.exists(default_video):
             default_video = os.path.join(HERE, "dance_example_1.mp4")
         self.video_path = default_video
-        self.show_video_frame = True
 
         # One tracker per source: they hold independent temporal state.
         self.tracker_file = PoseTracker(MODEL)
@@ -66,28 +65,28 @@ class PoseApp:
         # Worker threads push (label, image) here; only the Tk main loop pops.
         self.q = queue.Queue(maxsize=4)
 
+        # Both panels expand with the window so enlarging it fills the space.
         left = tk.Frame(root)
-        left.pack(side=tk.LEFT, padx=8, pady=6)
+        left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=8, pady=6)
         right = tk.Frame(root)
-        right.pack(side=tk.RIGHT, padx=8, pady=6)
+        right.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=8, pady=6)
 
-        tk.Label(left, text="Reference video").pack()
-        self.label_file = tk.Label(left)
-        self.label_file.pack()
+        tk.Label(left, text="Reference video").pack(side=tk.TOP)
         cf = tk.Frame(left)
-        cf.pack(pady=4)
+        cf.pack(side=tk.BOTTOM, pady=4)
         tk.Button(cf, text="Open Video", command=self.load_video).pack(side=tk.LEFT, padx=3)
         tk.Button(cf, text="Start", command=self.start_video).pack(side=tk.LEFT, padx=3)
         tk.Button(cf, text="Stop", command=self.stop_video).pack(side=tk.LEFT, padx=3)
-        tk.Button(cf, text="Show/Hide Video", command=self.toggle_video_display).pack(side=tk.LEFT, padx=3)
+        self.label_file = tk.Label(left, bg="black")
+        self.label_file.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        tk.Label(right, text="Webcam").pack()
-        self.label_cam = tk.Label(right)
-        self.label_cam.pack()
+        tk.Label(right, text="Webcam").pack(side=tk.TOP)
         cc = tk.Frame(right)
-        cc.pack(pady=4)
+        cc.pack(side=tk.BOTTOM, pady=4)
         tk.Button(cc, text="Start Webcam", command=self.start_cam).pack(side=tk.LEFT, padx=3)
         tk.Button(cc, text="Stop Webcam", command=self.stop_cam).pack(side=tk.LEFT, padx=3)
+        self.label_cam = tk.Label(right, bg="black")
+        self.label_cam.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self._pump()
@@ -111,9 +110,6 @@ class PoseApp:
 
     def stop_video(self):
         self.running_file = False
-
-    def toggle_video_display(self):
-        self.show_video_frame = not self.show_video_frame
 
     def start_cam(self):
         if not self.running_cam:
@@ -157,7 +153,7 @@ class PoseApp:
             shown += 1
 
             res = self.tracker_file.update(frame)
-            out = draw_pose(frame, res, show_frame=self.show_video_frame, show_bbox=True)
+            out = draw_pose(frame, res, show_frame=True, show_bbox=True)
             eff = shown / max(1e-6, time.perf_counter() - start)
             self._emit(self.label_file, hud(out, res, eff))
 
@@ -189,10 +185,10 @@ class PoseApp:
 
     # ---------------- Tk plumbing ----------------
     def _emit(self, label, frame_bgr):
-        rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(rgb).resize((DISPLAY_W, DISPLAY_H))
+        # Hand the raw frame to the main loop; letterboxing to the *current*
+        # panel size happens there, where the widget dimensions are known.
         try:
-            self.q.put_nowait((label, img))
+            self.q.put_nowait((label, frame_bgr))
         except queue.Full:
             pass  # display is behind; dropping this frame is the right call
 
@@ -200,9 +196,14 @@ class PoseApp:
         """Runs on the Tk main loop: the only place widgets are touched."""
         try:
             while True:
-                label, img = self.q.get_nowait()
-                tkimg = ImageTk.PhotoImage(image=img)
-                label.imgtk = tkimg           # keep a reference alive
+                label, frame_bgr = self.q.get_nowait()
+                bw, bh = label.winfo_width(), label.winfo_height()
+                if bw <= 1 or bh <= 1:            # not laid out yet
+                    bw, bh = DISPLAY_W, DISPLAY_H
+                fitted = fit_letterbox(frame_bgr, bw, bh)
+                rgb = cv2.cvtColor(fitted, cv2.COLOR_BGR2RGB)
+                tkimg = ImageTk.PhotoImage(image=Image.fromarray(rgb))
+                label.imgtk = tkimg               # keep a reference alive
                 label.configure(image=tkimg)
         except queue.Empty:
             pass

@@ -208,6 +208,29 @@ class PoseTracker:
 
 
 # ----------------------------------------------------------------------
+# display helpers
+# ----------------------------------------------------------------------
+def fit_letterbox(frame, box_w, box_h, pad=(0, 0, 0)):
+    """Resize a BGR frame into box_w x box_h *preserving aspect ratio*.
+
+    A plain cv2.resize / PIL.resize stretches the frame to the target box, so a
+    4:3 webcam shown in a 9:16 panel comes out squashed (too thin) and a
+    portrait clip in a landscape panel comes out too wide. This scales by the
+    smaller factor and pads the leftover with `pad`, so nobody is distorted.
+    """
+    h, w = frame.shape[:2]
+    if w == 0 or h == 0:
+        return np.full((box_h, box_w, 3), pad, np.uint8)
+    scale = min(box_w / w, box_h / h)
+    nw, nh = max(1, int(round(w * scale))), max(1, int(round(h * scale)))
+    resized = cv2.resize(frame, (nw, nh), interpolation=cv2.INTER_AREA)
+    canvas = np.full((box_h, box_w, 3), pad, np.uint8)
+    x0, y0 = (box_w - nw) // 2, (box_h - nh) // 2
+    canvas[y0:y0 + nh, x0:x0 + nw] = resized
+    return canvas
+
+
+# ----------------------------------------------------------------------
 # rendering
 # ----------------------------------------------------------------------
 def draw_skeleton(canvas, xy, valid, color_line=(0, 255, 0),
