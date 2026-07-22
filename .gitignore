@@ -231,3 +231,8 @@ expert/facial_expression_dataset/
 
 # Bonus reference/demo videos (kept out of git; share via drive)
 bonus/video/*.mp4
+
+# Temple Run sprite assets (large PNGs; keep local, share via drive)
+bonus/assets/*.png
+bonus/assets/*.jpg
+bonus/assets/*.jpeg
