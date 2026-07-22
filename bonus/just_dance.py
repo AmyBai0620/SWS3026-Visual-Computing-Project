@@ -36,7 +36,7 @@ from pose_score import PoseScorer, TIER_POINTS, scorable
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL = os.path.join(HERE, "yolov8n-pose.pt")
-REF_NAME = "dance_example_5"
+REF_NAME = "dance_example_7"
 
 DISPLAY_W, DISPLAY_H = 360, 640    # portrait reference video
 

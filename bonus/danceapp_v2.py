@@ -66,10 +66,17 @@ class PoseApp:
         self.q = queue.Queue(maxsize=4)
 
         # Both panels expand with the window so enlarging it fills the space.
-        left = tk.Frame(root)
+        # pack_propagate(False) is essential: the video image is sized to the
+        # label, and a label *requests* its image's size. With propagation on
+        # that request grows the frame, which enlarges the label, which enlarges
+        # the next image -- a runaway that lets the reference panel swallow the
+        # webcam. Locking the frames to their packed 50/50 share breaks it.
+        left = tk.Frame(root, width=520, height=400)
         left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=8, pady=6)
-        right = tk.Frame(root)
+        left.pack_propagate(False)
+        right = tk.Frame(root, width=520, height=400)
         right.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=8, pady=6)
+        right.pack_propagate(False)
 
         tk.Label(left, text="Reference video").pack(side=tk.TOP)
         cf = tk.Frame(left)
