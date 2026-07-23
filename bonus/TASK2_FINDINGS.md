@@ -22,6 +22,18 @@ bonus/
 
 **关键设计——参考视频预处理**:参考视频固定不变,`precompute_reference.py` 把它的每帧关键点离线算好存成 `.npz`(dance_example_5:389 帧、47 KB)。运行时参考侧直接查表,**只有摄像头做实时推理**,双路负载减半,是 CPU 上双面板能流畅的前提。
 
+**怎么换参考视频**:正因为评分依赖这份预计算缓存,`just_dance.py` 不像 `danceapp_v2.py` 那样有 "Open Video" 按钮——任意 mp4 在运行时没有缓存就没法评分。换视频要两步:
+
+```bash
+python precompute_reference.py dance_example_2   # 1) 生成 ref_dance_example_2.npz
+```
+
+```python
+REF_NAME = "dance_example_2"                     # 2) 改 just_dance.py 顶部这个常量
+```
+
+`video/` 下可选:`dance_example_1/2/3/5/6`、`dance_examle_4`,每个都要先 precompute 一次(目前只有 `dance_example_5` 做过)。
+
 ---
 
 ## 1. 双面板程序(细则第 13 题)
@@ -120,6 +132,8 @@ self._lag = clip((1-lag_ema)*self._lag + lag_ema*implied, 0, max_lag)
 - **随时间怎么变?** 每帧分数做 EMA 平滑(α=0.5)避免文字档频繁跳变,实时显示。见 `task2_score_timeline_dance_example_5.png`:三种舞者(好 / 时快时慢 / 错误动作)的分数曲线落在不同色带,一眼看出档位。
 - **结束有总分吗?怎么算?** 有。跳完后汇总:**总分 = 全程逐帧分的平均**,并给出档位分布(多少帧 PERFECT/SUPER/GOOD/X)。`just_dance.py` 在参考视频放完时弹窗显示。
 - **关键:不可评的帧计 0,不丢弃。** 用户没入镜/身体不全时,该帧记 **0 分并计入总评**(而不是跳过)。否则"难段落退出画面"就成了免罚——见 §4。
+
+> ⚠️ **待重跑**:`task2_score_timeline_dance_example_5.png` 以及任何"实测总分"数字都是 **§4 加固之前**的评分系统产出的,现已不代表当前分数(新系统更严:活跃度门 + 覆盖度惩罚 + 50° 容差)。答辩前需重跑 `python score_timeline.py dance_example_5` 并重新实测一次总分。
 
 ---
 

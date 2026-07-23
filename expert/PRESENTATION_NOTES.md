@@ -2,7 +2,7 @@
 
 > 对标评分细则第 4–10 题。本文件是报告章节 + 口头讲解底稿。
 > 配套素材:`confusion_matrix.png`、`svm_model.pkl`、`realtime_demo_v2.py` 的录屏/截图。
-> ⚠️ 第 6 题(改进后的混淆矩阵)与第 5 题错分样本图待 FER-2013 数据集到位后补;此处先写方法与占位。
+> ✅ **FER-2013 数据集已到位**(`expert/facial_expression_dataset/`,train+test 共 35,887 张、7 类齐全),第 5 题错分样本图与第 6 题 before/after 混淆矩阵的**阻塞已解除**,现在缺的只是把脚本跑一遍(见文末「待办」)。
 
 ---
 
@@ -40,7 +40,7 @@
 
 **交叉印证**:我们的三模型关键点基准(见 `experiments/landmark_benchmark`)也发现 Sad/Angry/Disgust 的关键点质量在三个模型上都最差——两份独立证据指向同一结论:**瓶颈在特征,不在分类器**。
 
-> 待补:挑十几张分错的测试图拼成 montage,标注"真值 vs 预测"(需数据集)。
+> 待补:挑十几张分错的测试图拼成 montage,标注"真值 vs 预测"。**数据集已到位,可以直接做**——从 `facial_expression_dataset/test/` 取图,对照 SVM 预测结果筛出错分样本。
 
 ---
 
@@ -56,7 +56,7 @@
 - **before/after 实验**:用 MediaPipe(或 FAN)特征训练同一 RBF-SVM,与 LBF 版本同表对比 Accuracy / Macro-F1 / 混淆矩阵。
 - 得益于统一的 `emotion_recognizer.py` 接口,换特征无需改动 GUI 与特效层。
 
-> 待补:改进后的混淆矩阵与准确率数字(需数据集重训)。
+> 待补:改进后的混淆矩阵与准确率数字。**数据集已到位,可以直接重训**——用 MediaPipe(或 FAN)重跑 `extract_features.py` → `train_classifier.py`,得到第二张混淆矩阵与 before/after 对比表。
 
 ---
 
@@ -102,3 +102,15 @@
 - **30ms 怎么保证?** 实测 predict 约 3ms,`predict_proba` 约 3ms,三倍余量。
 - **支持向量为什么有 24722 个(占训练集 86%)?** 说明 7 类在 136 维关键点空间里边界严重交错,几乎每个样本都在"前线"——定量证明了特征区分度有限,呼应第 5/6 题"瓶颈在特征"。
 - **为什么不用 CNN 直接吃图?** 项目明确要求只用关键点;且我们没有 GPU,SVM 在 CPU 上 3ms 预测更适合实时。
+
+---
+
+## 待办
+
+FER-2013 数据集(`facial_expression_dataset/`,35,887 张)**已到位**,原先的阻塞已解除,剩下的都是「跑脚本」:
+
+- [x] LBF + RBF-SVM 基线(准确率 46.92%,Macro-F1 0.436)与第一张 `confusion_matrix.png`
+- [x] V2 特效系统(七类特效 + 贴纸 + 3 帧多数投票平滑)
+- [ ] **第 5 题错分样本 montage**:从 test 集筛出错分图,拼图标注「真值 vs 预测」
+- [ ] **第 6 题 before/after**:用 MediaPipe/FAN 重跑 `extract_features.py` → `train_classifier.py`,产出第二张混淆矩阵 + 对比表
+- [ ] **录屏**:`realtime_demo_v2.py` 的实时演示,并对比展示「关闭平滑 vs 开启平滑」的闪烁差异(细则第 10 题明确要求 show the problem)

@@ -144,14 +144,23 @@ class PoseApp:
         shown = 0
 
         while cap.isOpened() and self.running_file:
-            # Keep playback on the video's own clock: if inference fell behind,
-            # skip the frames we should already be past instead of playing the
-            # whole clip in slow motion.
+            # Keep playback on the video's own clock, in BOTH directions.
+            # Behind (the usual case on CPU): skip the frames we should already
+            # be past instead of playing the whole clip in slow motion.
             target_idx = int((time.perf_counter() - start) * src_fps)
             while frame_idx < target_idx:
                 if not cap.grab():          # grab() decodes nothing, so skipping is cheap
                     break
                 frame_idx += 1
+
+            # Ahead (fast machine / GPU, or a low-fps clip): wait until this
+            # frame is actually due. Without this the loop free-runs and
+            # fast-forwards the video -- the same bug that bit just_dance.py,
+            # where nothing throttled it because inference was precomputed.
+            due = start + frame_idx / src_fps
+            now = time.perf_counter()
+            if now < due:
+                time.sleep(due - now)
 
             ret, frame = cap.read()
             if not ret:
