@@ -21,7 +21,7 @@
 ### 分类器选择
 - **RBF-SVM** + `StandardScaler` + `class_weight="balanced"`(后者补偿 disgust 样本少的问题)。
 - **实时性达标**:实测单次预测约 **3ms**(P95 < 5ms),远低于 30ms / 30FPS 的硬性要求。
-- 已开启 `probability=True`,可输出七类概率(如 "happy 56.5%"),供特效层做置信度门控。
+- ⚠️ **概率输出目前没有**:仓库里的 `train_classifier.py:26` 建的是 `SVC(kernel="rbf", C=10, gamma="scale", class_weight="balanced")`,**没有** `probability=True`,`svm_model.pkl` 里的模型实测 `probability == False`。`emotion_recognizer._estimate_confidence()` 因此返回 `None`,V2 状态栏的置信度显示为 `N/A`。要做置信度门控必须先带 `probability=True` 重训(内部要跑 5 折 Platt 校准,训练时间明显变长)。
 
 **当前测试集表现:准确率 46.92%,Macro-F1 0.436。**
 > 讲解提示:47% 不是差成绩。参照系——瞎猜 14%,全押 happy 25%,纯关键点方法文献典型区间 45–55%,人类自己才 65%。低是因为只用 68 点且数据集本身脏,不是流水线有问题。
@@ -65,7 +65,7 @@
 从"检测到表情"到"渲染特效"的全过程,以 V2(`realtime_demo_v2.py`)为例:
 
 **通用前半段(所有特效共用)**:
-摄像头帧 → Haar 检测人脸框 → 主脸筛选(只保留最大/最居中的脸,避免多框)→ LBF 提 68 点 → 归一化 → SVM 预测标签 + 概率 → **3 帧多数投票平滑**(见第 10 题)→ 得到稳定的当前表情标签。
+摄像头帧 → Haar 检测人脸框 → 主脸筛选(只保留最大/最居中的脸,避免多框)→ LBF 提 68 点 → 归一化 → SVM 预测标签(当前模型无概率输出,见第 4 题)→ **3 帧多数投票平滑**(见第 10 题)→ 得到稳定的当前表情标签。
 
 **特效 1:Happy(程序化绘制,`_draw_happy`)**
 拿到 "happy" 标签后:
@@ -99,7 +99,7 @@
 ## Q&A 备答
 
 - **只有 47% 会不会太低?** 见第 4 题参照系。纯关键点 + 脏数据集的合理区间,人类也才 65%。
-- **30ms 怎么保证?** 实测 predict 约 3ms,`predict_proba` 约 3ms,三倍余量。
+- **30ms 怎么保证?** 实测 `predict` 约 3ms,十倍余量。(`predict_proba` 当前模型没开,见第 4 题。)
 - **支持向量为什么有 24722 个(占训练集 86%)?** 说明 7 类在 136 维关键点空间里边界严重交错,几乎每个样本都在"前线"——定量证明了特征区分度有限,呼应第 5/6 题"瓶颈在特征"。
 - **为什么不用 CNN 直接吃图?** 项目明确要求只用关键点;且我们没有 GPU,SVM 在 CPU 上 3ms 预测更适合实时。
 
@@ -114,3 +114,4 @@ FER-2013 数据集(`facial_expression_dataset/`,35,887 张)**已到位**,原先�
 - [ ] **第 5 题错分样本 montage**:从 test 集筛出错分图,拼图标注「真值 vs 预测」
 - [ ] **第 6 题 before/after**:用 MediaPipe/FAN 重跑 `extract_features.py` → `train_classifier.py`,产出第二张混淆矩阵 + 对比表
 - [ ] **录屏**:`realtime_demo_v2.py` 的实时演示,并对比展示「关闭平滑 vs 开启平滑」的闪烁差异(细则第 10 题明确要求 show the problem)
+- [ ] **(可选)带 `probability=True` 重训**:当前 `svm_model.pkl` 的 `probability=False`,V2 状态栏置信度显示 `N/A`;想在答辩里展示"低置信度就不切换标签"的门控,需要在 `train_classifier.py:26` 加上这个参数重训一次

@@ -10,7 +10,7 @@ Real-time facial expression effects and Just Dance pose analysis project for SWS
 | --- | --- | --- | --- |
 | Beginner | `beginner/` | Haar + LBF 人脸检测/关键点，与 MediaPipe 的 10 场景鲁棒性对比 | [FINDINGS.md](beginner/FINDINGS.md)（第 1–3 题） |
 | Expert | `expert/` | FER-2013 表情分类（LBF 68 点 + RBF-SVM）与实时特效 V2 | [PRESENTATION_NOTES.md](expert/PRESENTATION_NOTES.md)（第 4–10 题） |
-| Bonus (Task 1) | `bonus/` | YOLOv8-pose 姿态流水线：主舞者选择、时序关联、EMA 平滑 | [FINDINGS.md](bonus/FINDINGS.md)（第 11–12 题） |
+| Bonus (Task 1) | `bonus/` | YOLOv8-pose 姿态流水线：主舞者选择、时序关联、EMA 平滑 | [FINDINGS.md](bonus/FINDINGS.md)（第 11–12 题）；英文报告版 [bonus level task 1.md](bonus/bonus%20level%20task%201.md) |
 | Bonus (Task 2) | `bonus/` | Just Dance 评分系统 + 神庙逃亡体感游戏 | [TASK2_FINDINGS.md](bonus/TASK2_FINDINGS.md)（第 13–16 题） |
 
 **运行环境**：conda 环境 `vcwork`（torch 2.7.1 CPU 版、opencv、mediapipe、scikit-learn、ultralytics）。系统 Python 没有 cv2，脚本请在 `vcwork` 下跑。

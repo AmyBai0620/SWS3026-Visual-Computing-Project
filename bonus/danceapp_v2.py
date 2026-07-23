@@ -52,10 +52,10 @@ class PoseApp:
 
         self.running_file = False
         self.running_cam = False
-        # Prefer the video/ folder; fall back to the bundled sample.
+        # Both live in video/; the second is the fallback if the first is missing.
         default_video = os.path.join(HERE, "video", "dance_example_2.mp4")
         if not os.path.exists(default_video):
-            default_video = os.path.join(HERE, "dance_example_1.mp4")
+            default_video = os.path.join(HERE, "video", "dance_example_1.mp4")
         self.video_path = default_video
 
         # One tracker per source: they hold independent temporal state.

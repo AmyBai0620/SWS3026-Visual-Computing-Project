@@ -1,7 +1,7 @@
 # Bonus Level Task 2 — Just Dance 实验结论与答辩讲稿
 
 > 运行环境:conda 环境 **`vcwork`**,torch 2.7.1 **CPU 版**。
-> 前置:先跑 `python precompute_reference.py dance_example_5` 生成参考骨架缓存。
+> 前置:参考骨架缓存要先离线生成。目前 `video/` 下已有 `ref_dance_example_5/6/7.npz` 三份缓存,`just_dance.py` 里 `REF_NAME` 当前指向 **`dance_example_7`**;换别的视频要先 `python precompute_reference.py <name>`。
 
 ---
 
@@ -20,7 +20,7 @@ bonus/
 └── temple_run.py             # 神庙逃亡体感小游戏(Q16)
 ```
 
-**关键设计——参考视频预处理**:参考视频固定不变,`precompute_reference.py` 把它的每帧关键点离线算好存成 `.npz`(dance_example_5:389 帧、47 KB)。运行时参考侧直接查表,**只有摄像头做实时推理**,双路负载减半,是 CPU 上双面板能流畅的前提。
+**关键设计——参考视频预处理**:参考视频固定不变,`precompute_reference.py` 把它的每帧关键点离线算好存成 `.npz`(dance_example_5:389 帧、47 KB;dance_example_7:3022 帧、352 KB)。运行时参考侧直接查表,**只有摄像头做实时推理**,双路负载减半,是 CPU 上双面板能流畅的前提。
 
 **怎么换参考视频**:正因为评分依赖这份预计算缓存,`just_dance.py` 不像 `danceapp_v2.py` 那样有 "Open Video" 按钮——任意 mp4 在运行时没有缓存就没法评分。换视频要两步:
 
@@ -29,10 +29,10 @@ python precompute_reference.py dance_example_2   # 1) 生成 ref_dance_example_2
 ```
 
 ```python
-REF_NAME = "dance_example_2"                     # 2) 改 just_dance.py 顶部这个常量
+REF_NAME = "dance_example_2"                     # 2) 改 just_dance.py:39 这个常量(当前值是 dance_example_7)
 ```
 
-`video/` 下可选:`dance_example_1/2/3/5/6`、`dance_examle_4`,每个都要先 precompute 一次(目前只有 `dance_example_5` 做过)。
+`video/` 下可选:`dance_example_1/2/3/5/6/7`、`dance_examle_4`,每个都要先 precompute 一次(目前已做 `dance_example_5`、`dance_example_6`、`dance_example_7`)。
 
 ---
 
@@ -133,7 +133,7 @@ self._lag = clip((1-lag_ema)*self._lag + lag_ema*implied, 0, max_lag)
 - **结束有总分吗?怎么算?** 有。跳完后汇总:**总分 = 全程逐帧分的平均**,并给出档位分布(多少帧 PERFECT/SUPER/GOOD/X)。`just_dance.py` 在参考视频放完时弹窗显示。
 - **关键:不可评的帧计 0,不丢弃。** 用户没入镜/身体不全时,该帧记 **0 分并计入总评**(而不是跳过)。否则"难段落退出画面"就成了免罚——见 §4。
 
-> ⚠️ **待重跑**:`task2_score_timeline_dance_example_5.png` 以及任何"实测总分"数字都是 **§4 加固之前**的评分系统产出的,现已不代表当前分数(新系统更严:活跃度门 + 覆盖度惩罚 + 50° 容差)。答辩前需重跑 `python score_timeline.py dance_example_5` 并重新实测一次总分。
+> ⚠️ **待重跑**:`task2_score_timeline_dance_example_5.png` 以及任何"实测总分"数字都是 **§4 加固之前**的评分系统产出的,现已不代表当前分数(新系统更严:活跃度门 + 覆盖度惩罚 + 50° 容差)。答辩前需重跑一次 `python score_timeline.py <name>` 并重新实测总分;注意曲线图用的是 `dance_example_5`,而 `just_dance.py` 现在的 `REF_NAME` 是 `dance_example_7`,答辩时两者应统一到实际要演示的那个视频。
 
 ---
 
