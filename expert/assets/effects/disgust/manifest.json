@@ -1,0 +1,511 @@
+{
+  "emotion": "disgust",
+  "version": "1.3",
+  "naming": "main_cloud.png, core_01.png..., fragment_01.png...",
+  "assets": [
+    {
+      "file": "main_cloud.png",
+      "type": "main",
+      "tight_path": "tight/main_cloud.png",
+      "runtime_path": "runtime/main_cloud.png",
+      "runtime_size": [
+        320,
+        320
+      ],
+      "tight_size": [
+        466,
+        332
+      ]
+    },
+    {
+      "file": "core_01.png",
+      "type": "core",
+      "tight_path": "tight/core_01.png",
+      "runtime_path": "runtime/core_01.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        110,
+        222
+      ]
+    },
+    {
+      "file": "core_02.png",
+      "type": "core",
+      "tight_path": "tight/core_02.png",
+      "runtime_path": "runtime/core_02.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        72,
+        224
+      ]
+    },
+    {
+      "file": "core_03.png",
+      "type": "core",
+      "tight_path": "tight/core_03.png",
+      "runtime_path": "runtime/core_03.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        153,
+        161
+      ]
+    },
+    {
+      "file": "core_04.png",
+      "type": "core",
+      "tight_path": "tight/core_04.png",
+      "runtime_path": "runtime/core_04.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        155,
+        140
+      ]
+    },
+    {
+      "file": "core_05.png",
+      "type": "core",
+      "tight_path": "tight/core_05.png",
+      "runtime_path": "runtime/core_05.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        180,
+        158
+      ]
+    },
+    {
+      "file": "core_06.png",
+      "type": "core",
+      "tight_path": "tight/core_06.png",
+      "runtime_path": "runtime/core_06.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        132,
+        150
+      ]
+    },
+    {
+      "file": "core_07.png",
+      "type": "core",
+      "tight_path": "tight/core_07.png",
+      "runtime_path": "runtime/core_07.png",
+      "runtime_size": [
+        128,
+        128
+      ],
+      "tight_size": [
+        98,
+        162
+      ]
+    },
+    {
+      "file": "fragment_01.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_01.png",
+      "runtime_path": "runtime/fragment_01.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        63,
+        115
+      ]
+    },
+    {
+      "file": "fragment_02.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_02.png",
+      "runtime_path": "runtime/fragment_02.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        83,
+        113
+      ]
+    },
+    {
+      "file": "fragment_03.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_03.png",
+      "runtime_path": "runtime/fragment_03.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        74,
+        75
+      ]
+    },
+    {
+      "file": "fragment_04.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_04.png",
+      "runtime_path": "runtime/fragment_04.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        66,
+        74
+      ]
+    },
+    {
+      "file": "fragment_05.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_05.png",
+      "runtime_path": "runtime/fragment_05.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        42,
+        42
+      ]
+    },
+    {
+      "file": "fragment_06.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_06.png",
+      "runtime_path": "runtime/fragment_06.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        69,
+        66
+      ]
+    },
+    {
+      "file": "fragment_07.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_07.png",
+      "runtime_path": "runtime/fragment_07.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        92,
+        62
+      ]
+    },
+    {
+      "file": "fragment_08.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_08.png",
+      "runtime_path": "runtime/fragment_08.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        142,
+        44
+      ]
+    },
+    {
+      "file": "fragment_09.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_09.png",
+      "runtime_path": "runtime/fragment_09.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        87,
+        35
+      ]
+    },
+    {
+      "file": "fragment_10.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_10.png",
+      "runtime_path": "runtime/fragment_10.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        72,
+        43
+      ]
+    },
+    {
+      "file": "fragment_11.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_11.png",
+      "runtime_path": "runtime/fragment_11.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        68,
+        52
+      ]
+    },
+    {
+      "file": "fragment_12.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_12.png",
+      "runtime_path": "runtime/fragment_12.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        63,
+        60
+      ]
+    },
+    {
+      "file": "fragment_13.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_13.png",
+      "runtime_path": "runtime/fragment_13.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        69,
+        69
+      ]
+    },
+    {
+      "file": "fragment_14.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_14.png",
+      "runtime_path": "runtime/fragment_14.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        78,
+        73
+      ]
+    },
+    {
+      "file": "fragment_15.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_15.png",
+      "runtime_path": "runtime/fragment_15.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        41,
+        97
+      ]
+    },
+    {
+      "file": "fragment_16.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_16.png",
+      "runtime_path": "runtime/fragment_16.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        32,
+        87
+      ]
+    },
+    {
+      "file": "fragment_17.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_17.png",
+      "runtime_path": "runtime/fragment_17.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        61,
+        62
+      ]
+    },
+    {
+      "file": "fragment_18.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_18.png",
+      "runtime_path": "runtime/fragment_18.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        54,
+        57
+      ]
+    },
+    {
+      "file": "fragment_19.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_19.png",
+      "runtime_path": "runtime/fragment_19.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        67,
+        66
+      ]
+    },
+    {
+      "file": "fragment_20.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_20.png",
+      "runtime_path": "runtime/fragment_20.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        64,
+        72
+      ]
+    },
+    {
+      "file": "fragment_21.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_21.png",
+      "runtime_path": "runtime/fragment_21.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        67,
+        72
+      ]
+    },
+    {
+      "file": "fragment_22.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_22.png",
+      "runtime_path": "runtime/fragment_22.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        55,
+        60
+      ]
+    },
+    {
+      "file": "fragment_23.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_23.png",
+      "runtime_path": "runtime/fragment_23.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        72,
+        70
+      ]
+    },
+    {
+      "file": "fragment_24.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_24.png",
+      "runtime_path": "runtime/fragment_24.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        63,
+        67
+      ]
+    },
+    {
+      "file": "fragment_25.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_25.png",
+      "runtime_path": "runtime/fragment_25.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        46,
+        67
+      ]
+    },
+    {
+      "file": "fragment_26.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_26.png",
+      "runtime_path": "runtime/fragment_26.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        66,
+        61
+      ]
+    },
+    {
+      "file": "fragment_27.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_27.png",
+      "runtime_path": "runtime/fragment_27.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        68,
+        66
+      ]
+    },
+    {
+      "file": "fragment_28.png",
+      "type": "fragment",
+      "tight_path": "tight/fragment_28.png",
+      "runtime_path": "runtime/fragment_28.png",
+      "runtime_size": [
+        64,
+        64
+      ],
+      "tight_size": [
+        53,
+        59
+      ]
+    }
+  ]
+}

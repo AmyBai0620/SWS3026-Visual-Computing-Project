@@ -697,7 +697,7 @@ class EmotionEffects:
         frame_index: int,
         alpha: float,
     ):
-        """Fear: trembling thin outline and a sweat drop."""
+        """Fear: trembling four-corner frame and a sweat drop."""
         region = self._effect_region(
             frame,
             face_box,
@@ -723,13 +723,14 @@ class EmotionEffects:
             )
         )
 
-        cv2.rectangle(
+        # Keep the trembling motion, but use the same four-corner frame
+        # style as the other emotions instead of drawing a full rectangle.
+        shifted_box = (x + shift, y, w, h)
+        self._draw_corner_frame(
             overlay,
-            (x + shift, y),
-            (x + w + shift, y + h),
+            shifted_box,
             color,
-            2,
-            cv2.LINE_AA,
+            thickness=2,
         )
 
         drop_x = x + int(w * 0.82)

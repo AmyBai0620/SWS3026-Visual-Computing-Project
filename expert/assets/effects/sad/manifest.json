@@ -1,0 +1,407 @@
+{
+  "category": "sad",
+  "version": "final multi-element",
+  "format": "RGBA transparent PNG",
+  "source": "Generated Sad sticker board matched to v2 multi-element effect style",
+  "asset_count": 28,
+  "grouping_rule": "Each sticker or fragment is exported as a complete visual object with transparent background.",
+  "animation_suggestion": {
+    "main_cloud": "Use as the main emotional badge above the face or near the chest.",
+    "core": "Use 3–8 at a time around the cloud. Pop out gently during the first 0.0–0.25 s.",
+    "fragment": "Use 6–12 light fragments as ambient pieces. Drift, wobble, or fade from 0.2–1.2 s."
+  },
+  "assets": [
+    {
+      "name": "main_cloud",
+      "role": "main",
+      "tight_file": "tight/main_cloud.png",
+      "runtime_file": "runtime/main_cloud.png",
+      "runtime_canvas": [
+        320,
+        320
+      ],
+      "recommended_display_px": [
+        220,
+        300
+      ]
+    },
+    {
+      "name": "core_raindrop_big_01",
+      "role": "core",
+      "tight_file": "tight/core_raindrop_big_01.png",
+      "runtime_file": "runtime/core_raindrop_big_01.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_raindrop_big_02",
+      "role": "core",
+      "tight_file": "tight/core_raindrop_big_02.png",
+      "runtime_file": "runtime/core_raindrop_big_02.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_raindrop_big_03",
+      "role": "core",
+      "tight_file": "tight/core_raindrop_big_03.png",
+      "runtime_file": "runtime/core_raindrop_big_03.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_rain_lines",
+      "role": "core",
+      "tight_file": "tight/core_rain_lines.png",
+      "runtime_file": "runtime/core_rain_lines.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_puddle_small",
+      "role": "core",
+      "tight_file": "tight/core_puddle_small.png",
+      "runtime_file": "runtime/core_puddle_small.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_puddle_large",
+      "role": "core",
+      "tight_file": "tight/core_puddle_large.png",
+      "runtime_file": "runtime/core_puddle_large.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_splash_big",
+      "role": "core",
+      "tight_file": "tight/core_splash_big.png",
+      "runtime_file": "runtime/core_splash_big.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "core_splash_small",
+      "role": "core",
+      "tight_file": "tight/core_splash_small.png",
+      "runtime_file": "runtime/core_splash_small.png",
+      "runtime_canvas": [
+        128,
+        128
+      ],
+      "recommended_display_px": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "fragment_01",
+      "role": "fragment",
+      "tight_file": "tight/fragment_01.png",
+      "runtime_file": "runtime/fragment_01.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_02",
+      "role": "fragment",
+      "tight_file": "tight/fragment_02.png",
+      "runtime_file": "runtime/fragment_02.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_03",
+      "role": "fragment",
+      "tight_file": "tight/fragment_03.png",
+      "runtime_file": "runtime/fragment_03.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_04",
+      "role": "fragment",
+      "tight_file": "tight/fragment_04.png",
+      "runtime_file": "runtime/fragment_04.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_05",
+      "role": "fragment",
+      "tight_file": "tight/fragment_05.png",
+      "runtime_file": "runtime/fragment_05.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_06",
+      "role": "fragment",
+      "tight_file": "tight/fragment_06.png",
+      "runtime_file": "runtime/fragment_06.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_07",
+      "role": "fragment",
+      "tight_file": "tight/fragment_07.png",
+      "runtime_file": "runtime/fragment_07.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_08",
+      "role": "fragment",
+      "tight_file": "tight/fragment_08.png",
+      "runtime_file": "runtime/fragment_08.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_09",
+      "role": "fragment",
+      "tight_file": "tight/fragment_09.png",
+      "runtime_file": "runtime/fragment_09.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_10",
+      "role": "fragment",
+      "tight_file": "tight/fragment_10.png",
+      "runtime_file": "runtime/fragment_10.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_11",
+      "role": "fragment",
+      "tight_file": "tight/fragment_11.png",
+      "runtime_file": "runtime/fragment_11.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_12",
+      "role": "fragment",
+      "tight_file": "tight/fragment_12.png",
+      "runtime_file": "runtime/fragment_12.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_13",
+      "role": "fragment",
+      "tight_file": "tight/fragment_13.png",
+      "runtime_file": "runtime/fragment_13.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_14",
+      "role": "fragment",
+      "tight_file": "tight/fragment_14.png",
+      "runtime_file": "runtime/fragment_14.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_15",
+      "role": "fragment",
+      "tight_file": "tight/fragment_15.png",
+      "runtime_file": "runtime/fragment_15.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_16",
+      "role": "fragment",
+      "tight_file": "tight/fragment_16.png",
+      "runtime_file": "runtime/fragment_16.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_17",
+      "role": "fragment",
+      "tight_file": "tight/fragment_17.png",
+      "runtime_file": "runtime/fragment_17.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_18",
+      "role": "fragment",
+      "tight_file": "tight/fragment_18.png",
+      "runtime_file": "runtime/fragment_18.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "fragment_19",
+      "role": "fragment",
+      "tight_file": "tight/fragment_19.png",
+      "runtime_file": "runtime/fragment_19.png",
+      "runtime_canvas": [
+        64,
+        64
+      ],
+      "recommended_display_px": [
+        10,
+        25
+      ]
+    }
+  ]
+}

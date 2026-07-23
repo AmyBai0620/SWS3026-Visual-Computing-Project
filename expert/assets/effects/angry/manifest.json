@@ -1,0 +1,472 @@
+{
+  "emotion": "angry",
+  "version": "1.2",
+  "assets": [
+    {
+      "file": "main_cloud.png",
+      "type": "main",
+      "label": "angry_main_cloud",
+      "tight_path": "tight/main_cloud.png",
+      "runtime_path": "runtime/main_cloud.png",
+      "tight_size": [
+        198,
+        145
+      ],
+      "runtime_size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "core_puff_left.png",
+      "type": "core",
+      "label": "angry_core_puff_left",
+      "tight_path": "tight/core_puff_left.png",
+      "runtime_path": "runtime/core_puff_left.png",
+      "tight_size": [
+        153,
+        143
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_puff_right.png",
+      "type": "core",
+      "label": "angry_core_puff_right",
+      "tight_path": "tight/core_puff_right.png",
+      "runtime_path": "runtime/core_puff_right.png",
+      "tight_size": [
+        140,
+        147
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_anger_mark_large.png",
+      "type": "core",
+      "label": "angry_core_anger_mark_large",
+      "tight_path": "tight/core_anger_mark_large.png",
+      "runtime_path": "runtime/core_anger_mark_large.png",
+      "tight_size": [
+        145,
+        154
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_anger_mark_small.png",
+      "type": "core",
+      "label": "angry_core_anger_mark_small",
+      "tight_path": "tight/core_anger_mark_small.png",
+      "runtime_path": "runtime/core_anger_mark_small.png",
+      "tight_size": [
+        116,
+        114
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_lightning.png",
+      "type": "core",
+      "label": "angry_core_lightning",
+      "tight_path": "tight/core_lightning.png",
+      "runtime_path": "runtime/core_lightning.png",
+      "tight_size": [
+        119,
+        184
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_flame.png",
+      "type": "core",
+      "label": "angry_core_flame",
+      "tight_path": "tight/core_flame.png",
+      "runtime_path": "runtime/core_flame.png",
+      "tight_size": [
+        143,
+        179
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_spark.png",
+      "type": "core",
+      "label": "angry_core_spark",
+      "tight_path": "tight/core_spark.png",
+      "runtime_path": "runtime/core_spark.png",
+      "tight_size": [
+        135,
+        151
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_anger_mark_tiny.png",
+      "type": "core",
+      "label": "angry_core_anger_mark_tiny",
+      "tight_path": "tight/core_anger_mark_tiny.png",
+      "runtime_path": "runtime/core_anger_mark_tiny.png",
+      "tight_size": [
+        77,
+        101
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_impact_lines_left.png",
+      "type": "core",
+      "label": "angry_core_impact_lines_left",
+      "tight_path": "tight/core_impact_lines_left.png",
+      "runtime_path": "runtime/core_impact_lines_left.png",
+      "tight_size": [
+        95,
+        162
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_anger_mark_alt_right.png",
+      "type": "core",
+      "label": "angry_core_anger_mark_alt_right",
+      "tight_path": "tight/core_anger_mark_alt_right.png",
+      "runtime_path": "runtime/core_anger_mark_alt_right.png",
+      "tight_size": [
+        116,
+        127
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_lightning_alt.png",
+      "type": "core",
+      "label": "angry_core_lightning_alt",
+      "tight_path": "tight/core_lightning_alt.png",
+      "runtime_path": "runtime/core_lightning_alt.png",
+      "tight_size": [
+        123,
+        179
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "core_impact_lines_right.png",
+      "type": "core",
+      "label": "angry_core_impact_lines_right",
+      "tight_path": "tight/core_impact_lines_right.png",
+      "runtime_path": "runtime/core_impact_lines_right.png",
+      "tight_size": [
+        97,
+        150
+      ],
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "fragment_01.png",
+      "type": "fragment",
+      "label": "angry_fragment_01",
+      "tight_path": "tight/fragment_01.png",
+      "runtime_path": "runtime/fragment_01.png",
+      "tight_size": [
+        98,
+        101
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_02.png",
+      "type": "fragment",
+      "label": "angry_fragment_02",
+      "tight_path": "tight/fragment_02.png",
+      "runtime_path": "runtime/fragment_02.png",
+      "tight_size": [
+        91,
+        93
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_03.png",
+      "type": "fragment",
+      "label": "angry_fragment_03",
+      "tight_path": "tight/fragment_03.png",
+      "runtime_path": "runtime/fragment_03.png",
+      "tight_size": [
+        81,
+        90
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_04.png",
+      "type": "fragment",
+      "label": "angry_fragment_04",
+      "tight_path": "tight/fragment_04.png",
+      "runtime_path": "runtime/fragment_04.png",
+      "tight_size": [
+        91,
+        102
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_05.png",
+      "type": "fragment",
+      "label": "angry_fragment_05",
+      "tight_path": "tight/fragment_05.png",
+      "runtime_path": "runtime/fragment_05.png",
+      "tight_size": [
+        86,
+        91
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_06.png",
+      "type": "fragment",
+      "label": "angry_fragment_06",
+      "tight_path": "tight/fragment_06.png",
+      "runtime_path": "runtime/fragment_06.png",
+      "tight_size": [
+        85,
+        93
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_07.png",
+      "type": "fragment",
+      "label": "angry_fragment_07",
+      "tight_path": "tight/fragment_07.png",
+      "runtime_path": "runtime/fragment_07.png",
+      "tight_size": [
+        80,
+        93
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_08.png",
+      "type": "fragment",
+      "label": "angry_fragment_08",
+      "tight_path": "tight/fragment_08.png",
+      "runtime_path": "runtime/fragment_08.png",
+      "tight_size": [
+        65,
+        65
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_09.png",
+      "type": "fragment",
+      "label": "angry_fragment_09",
+      "tight_path": "tight/fragment_09.png",
+      "runtime_path": "runtime/fragment_09.png",
+      "tight_size": [
+        62,
+        86
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_10.png",
+      "type": "fragment",
+      "label": "angry_fragment_10",
+      "tight_path": "tight/fragment_10.png",
+      "runtime_path": "runtime/fragment_10.png",
+      "tight_size": [
+        69,
+        83
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_11.png",
+      "type": "fragment",
+      "label": "angry_fragment_11",
+      "tight_path": "tight/fragment_11.png",
+      "runtime_path": "runtime/fragment_11.png",
+      "tight_size": [
+        80,
+        102
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_12.png",
+      "type": "fragment",
+      "label": "angry_fragment_12",
+      "tight_path": "tight/fragment_12.png",
+      "runtime_path": "runtime/fragment_12.png",
+      "tight_size": [
+        82,
+        102
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_13.png",
+      "type": "fragment",
+      "label": "angry_fragment_13",
+      "tight_path": "tight/fragment_13.png",
+      "runtime_path": "runtime/fragment_13.png",
+      "tight_size": [
+        67,
+        68
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_14.png",
+      "type": "fragment",
+      "label": "angry_fragment_14",
+      "tight_path": "tight/fragment_14.png",
+      "runtime_path": "runtime/fragment_14.png",
+      "tight_size": [
+        67,
+        70
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_15.png",
+      "type": "fragment",
+      "label": "angry_fragment_15",
+      "tight_path": "tight/fragment_15.png",
+      "runtime_path": "runtime/fragment_15.png",
+      "tight_size": [
+        65,
+        71
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_motion_left_red.png",
+      "type": "fragment",
+      "label": "angry_fragment_motion_left_red",
+      "tight_path": "tight/fragment_motion_left_red.png",
+      "runtime_path": "runtime/fragment_motion_left_red.png",
+      "tight_size": [
+        109,
+        108
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_motion_right_red.png",
+      "type": "fragment",
+      "label": "angry_fragment_motion_right_red",
+      "tight_path": "tight/fragment_motion_right_red.png",
+      "runtime_path": "runtime/fragment_motion_right_red.png",
+      "tight_size": [
+        110,
+        109
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fragment_motion_right_orange.png",
+      "type": "fragment",
+      "label": "angry_fragment_motion_right_orange",
+      "tight_path": "tight/fragment_motion_right_orange.png",
+      "runtime_path": "runtime/fragment_motion_right_orange.png",
+      "tight_size": [
+        108,
+        94
+      ],
+      "runtime_size": [
+        64,
+        64
+      ]
+    }
+  ],
+  "notes": "Sprites are extracted from the approved angry preview without redesigning their shapes. All tight and runtime files are RGBA PNGs with transparent backgrounds. Tight assets include at least 10 px of transparent safety margin. Runtime canvases are standardized to main 320x320, core 128x128, and fragment 64x64."
+}
