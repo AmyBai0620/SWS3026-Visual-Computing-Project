@@ -1,15 +1,24 @@
+"""单场景重录:far_away(退远 1.5-2 米)。
+
+和 task3_auto.py 逻辑一致,只跑 far_away 这一个场景,关键点半径单独调小,
+因为远景人脸在画面里很小,点太大会糊成一团看不出网格结构。
+
+产出:
+  shot_far_away.png       —— 直接覆盖,给 overview 用
+  results_far_away.csv    —— 单独写,不动 results.csv
+"""
 import cv2
 import time
 import csv
 import numpy as np
 import mediapipe as mp
 
-# ========== 实验场景列表(可自由增删) ==========
+# ========== 实验场景 ==========
 SCENARIOS = [
-    'close_up',              # 凑近
+    'far_away',              # 退远1.5-2米
 ]
-CAPTURE_SECONDS = 10         # 每个场景采集时长(秒)
-DOT_RADIUS = 2.2             # MediaPipe 关键点半径(支持小数)
+CAPTURE_SECONDS = 10         # 采集时长(秒)
+DOT_RADIUS = 0.3            # MediaPipe 关键点半径(远景专用,比主脚本小)
 DOT_R16 = int(round(DOT_RADIUS * 16))   # 转成 1/16 像素定点
 
 # ========== 初始化检测器 ==========
@@ -34,8 +43,8 @@ def new_stats():
             'mp_hit': 0, 'mp_ms': 0.0, 'frames': 0}
 
 cap = cv2.VideoCapture(0)
-cv2.namedWindow('Auto Experiment', cv2.WINDOW_NORMAL)
-cv2.resizeWindow('Auto Experiment', 1280, 480)
+cv2.namedWindow('Far Away', cv2.WINDOW_NORMAL)
+cv2.resizeWindow('Far Away', 1280, 480)
 
 while True:
     ret, frame = cap.read()
@@ -108,11 +117,6 @@ while True:
         remain = CAPTURE_SECONDS - elapsed
         cv2.putText(combined, f'RECORDING {SCENARIOS[scenario_idx]}  {remain:.1f}s',
                     (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
-        # 实时累计命中率,录制过程中就能看出两者差距
-        cv2.putText(combined,
-                    f"hit rate  Haar {stats['haar_hit']/stats['frames']*100:5.1f}%"
-                    f"   MP {stats['mp_hit']/stats['frames']*100:5.1f}%",
-                    (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
         if elapsed >= CAPTURE_SECONDS:
             # 本场景结束:算结果、存截图、进入下一场景
@@ -130,7 +134,7 @@ while True:
             scenario_idx += 1
             recording = False
 
-    cv2.imshow('Auto Experiment', combined)
+    cv2.imshow('Far Away', combined)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
@@ -142,7 +146,7 @@ while True:
 
 # ---------- 写出 CSV ----------
 if results:
-    out_csv = 'results_close_up.csv'   # 不覆盖已有的 results.csv
+    out_csv = 'results_far_away.csv'   # 不覆盖已有的 results.csv
     with open(out_csv, 'w', newline='', encoding='utf-8') as fp:
         writer = csv.DictWriter(fp, fieldnames=results[0].keys())
         writer.writeheader()

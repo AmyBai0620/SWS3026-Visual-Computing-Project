@@ -14,9 +14,9 @@ BASE = Path(__file__).resolve().parent
 
 # Nicer English labels for the presentation
 NICE = {
-    "baseline_frontal": "Baseline (frontal)",
     "turn_left_30": "Turn left ~30",
     "turn_left_60": "Turn left ~60",
+    "head_tilt": "Head tilt (roll ~45)",
     "look_up_down": "Look up / down",
     "cover_mouth": "Cover mouth",
     "cover_one_eye": "Cover one eye",

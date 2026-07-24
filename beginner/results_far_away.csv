@@ -1,2 +1,2 @@
 scenario,frames,haar_hit_rate_%,mp_hit_rate_%,haar_avg_ms,mp_avg_ms
-close_up,300,27.0,100.0,7.1,3.6
+far_away,301,2.0,100.0,7.9,3.9

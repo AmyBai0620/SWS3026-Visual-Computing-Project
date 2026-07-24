@@ -6,9 +6,9 @@ import mediapipe as mp
 
 # ========== 实验场景列表(可自由增删) ==========
 SCENARIOS = [
-    'baseline_frontal',      # 基准:正脸正常光
     'turn_left_30',          # 左转约30度
     'turn_left_60',          # 左转约60度
+    'head_tilt',             # 歪头:左右歪约45度(绕视线轴滚转)
     'look_up_down',          # 抬头低头
     'cover_mouth',           # 手遮嘴
     'cover_one_eye',         # 手遮一只眼
@@ -18,6 +18,8 @@ SCENARIOS = [
     'far_away',              # 退远1.5-2米
 ]
 CAPTURE_SECONDS = 10         # 每个场景采集时长(秒)
+DOT_RADIUS = 1.8             # MediaPipe 关键点半径(支持小数)
+DOT_R16 = int(round(DOT_RADIUS * 16))   # 转成 1/16 像素定点
 
 # ========== 初始化检测器 ==========
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -75,10 +77,21 @@ while True:
         h, w = frame.shape[:2]
         for face_lms in result.multi_face_landmarks:
             for p in face_lms.landmark:
-                cv2.circle(right, (int(p.x * w), int(p.y * h)), 1, (255, 0, 0), -1)
+                # shift=4 表示坐标/半径按 1/16 像素定点,这样半径能取到小数
+                cv2.circle(right, (int(p.x * w * 16), int(p.y * h * 16)),
+                           DOT_R16, (255, 0, 0), -1, cv2.LINE_AA, 4)
     mp_ms = (time.time() - t0) * 1000
 
     combined = np.hstack([left, right])
+
+    # ---------- 每个 panel 的检测状态(让"失败"也看得见) ----------
+    ph, pw = frame.shape[:2]
+    for x0, name, hit, ms in ((0, 'Haar+LBF', haar_detected, haar_ms),
+                              (pw, 'MediaPipe', mp_detected, mp_ms)):
+        color = (0, 255, 0) if hit else (0, 0, 255)
+        tag = 'DETECTED' if hit else 'NO FACE'
+        cv2.putText(combined, f'{name}: {tag}  {ms:.0f}ms',
+                    (x0 + 10, ph - 25), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color, 2)
 
     # ---------- 状态机逻辑 ----------
     if scenario_idx >= len(SCENARIOS):
