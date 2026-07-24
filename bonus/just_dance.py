@@ -307,15 +307,20 @@ class JustDanceApp:
 
     # ---------------- webcam + scoring ----------------
     def webcam_loop(self):
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
+        feed = CameraFeed(0)
+        if not feed.ok:
             self.running_cam = False
             messagebox.showwarning("No webcam", "Could not open the camera.")
             return
+        last_stamp = -1.0
         while self.running_cam:
-            ret, frame = cap.read()
-            if not ret:
-                break
+            frame, stamp = feed.latest()
+            if frame is None or stamp == last_stamp:
+                if not feed.running:
+                    break
+                time.sleep(0.002)          # nothing new yet; never re-score a frame
+                continue
+            last_stamp = stamp
             frame = cv2.flip(frame, 1)
             res = self.tracker_cam.update(frame)
             draw_skeleton(frame, res.xy, res.valid,
