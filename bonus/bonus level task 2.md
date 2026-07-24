@@ -183,6 +183,12 @@ Every threshold is **normalised in shoulder-widths**, so it is immune to how far
 > [!insight] Cutting jump latency (a real playtest fix)
 > A jump is instantaneous; "position crossed a threshold" alone reacts half a beat late. Three changes: (1) the game's `PoseTracker` runs with **smoothing off** (`smooth_alpha=1.0`) — responsiveness over smoothness; (2) a **velocity trigger** fires the instant shoulder rise-speed exceeds threshold, catching the takeoff rather than waiting for the apex; (3) the action is **latched for 0.35 s** so a brief peak reliably covers the frame where the obstacle is resolved.
 
+**The camera panel now shows the rule, not just the skeleton.** A webcam is landscape but the game board is portrait, so letterboxing the camera into a tall side-strip dropped the player into a band of black bars and made them tiny. The panel is now split: the **webcam fills a 4:3 block up top at native aspect** (no crop, no stretch, the player is large), and the **leftover height becomes a dashboard** with two gauges — `dx` and `dy` in shoulder-widths, the threshold ticks, and a hollow marker for the *velocity* term rescaled onto the same axis — plus the big current-action word and the calibration progress. An audience watching the recording sees the exact number that produced each decision.
+
+> [!warning] The bug the gauge exposed: every gesture fired its own opposite
+> Putting the measurement on screen immediately showed the flaw. A gesture has two halves, and **the recovery half is a fast move in the opposite direction**: coming down from a jump is a large negative shoulder velocity, which tripped the *velocity* duck trigger — so the runner dropped into a slide the instant he landed (and rising out of a duck fired a jump).
+> **Fix:** a velocity trigger only counts when the *position* does not contradict it (`vy < −VEL_TH` **and** `up < 0.5·MOVE_TH`), plus a `RECOVER_S = 0.15 s` dead time for the opposite trigger while the previous latch unwinds. A *position* trigger is always trusted — a deep squat is unambiguous. Measured on a synthetic out-and-back gesture: **6 contaminated frames per gesture → 0**, and the correct action is held for more frames than before (53 → 59).
+
 ### 5.2 How new objects are rendered (Q16: rendering)
 
 **First-person perspective corridor + real sprite art + a scrolling texture floor.** The world is modelled in depth `z` (0 at the player, larger = farther); every object is projected through a vanishing point: `t = z/(z+K)`, near-large-far-small `scale = 1 − t`, lanes converging to the vanishing point.
@@ -193,17 +199,43 @@ Every threshold is **normalised in shoulder-widths**, so it is immune to how far
 
 The alpha compositing is the same technique as the Expert-task sticker rendering.
 
+**Game feel — the layer that separates a demo from a game.** Everything below exists because a recording is judged on how it *moves*:
+
+| Effect | What it does | Why |
+|---|---|---|
+| Eased lane change + bank | the runner slides between lanes (`τ = 75 ms`) and tilts into the turn | he used to teleport between three x positions |
+| Chase camera | pans 20 % toward the runner, bobs with speed, shakes on a hit | sells the turn and the impact |
+| Jump arc, landing squash, footfall dust | fast rise, gravity-paced fall, a small squash and a dust puff on touchdown | the jump had no weight |
+| Coin sparks, rings, floating `+points` | stacked above the runner's head so a coin run does not pile labels on one spot | every event now has feedback |
+| Impact: debris, red rim vignette, 0.3 s slow motion | on losing a life | a life used to vanish with a red flash |
+| Speed streaks, last-life heartbeat vignette | scale with `speed` / trigger at 1 life | shows the difficulty ramp |
+| `3 · 2 · 1 · GO!` countdown, staggered results reveal | between calibration and play, and on game over | gives the recording a beat |
+
+> [!important] It got faster, not slower
+> All of that is **cheaper than the version before it**: `render()` went **29.3 ms → 25.4 ms** per frame (busy scene, same machine). The win came from two hot loops that were written in numpy: the per-sprite alpha composite `fg*a + sub*(1−a)` and the background's fog blend allocate several full-size float temporaries each. Rewritten through OpenCV (`cv2.subtract/multiply/add`, `cv2.copyTo` for the floor/wall mask) they are **6× and 3.5× faster** — 5.2 ms → 0.8 ms for one large sprite. The camera shift is a strided copy instead of `warpAffine` (2.5 ms → 0.4 ms), and the HUD dims only its own 52-row strip.
+
 ### 5.3 How the score is computed (Q16: scoring)
 
-Score = **survival distance / 10 + coins × 10 + obstacles avoided × 5**; a hit costs one of 3 lives, and zero lives ends the run. Obstacle speed ramps up slowly over time.
+Score = **distance / 10 + coins × 10 + obstacles avoided × 5**, each event multiplied by a **combo multiplier** (×1 → ×4, one step per 4 clean events, lost on a hit or after 4 s of nothing) plus a **+3 near-miss bonus** for a lane dodge inside 0.3 s of impact. A hit costs one of 3 lives, zero lives ends the run, and obstacle speed ramps from 30 to 62 depth-units/s.
+
+> [!insight] Judging a webcam gesture on a single frame is unfair
+> An obstacle used to be resolved on the **one frame** it crossed the player plane, against the lane and action of that instant. But the input is a 30 fps pose estimate of a human body — nobody is frame-accurate. Obstacles are now judged over a **window**: a jump/duck counts if it started up to `EARLY_GRACE = 0.30 s` before the crossing, the verdict is **deferred by `LATE_GRACE = 0.16 s`** so a slightly late reaction still saves you, and lane obstacles also look back `0.12 s` through a lane history. Spawning enforces a minimum spatial gap (and a wider one between two consecutive reaction obstacles) so no combination is unavoidable, and hurdles/overhangs — which no lane is safe from — are rendered **spanning the whole corridor** instead of centred on a lane, which is what they actually mean.
 
 A full **state machine** wraps it (a playtest fix — the original started instantly with no buffer):
-`menu (SPACE) → calibrate (stand still) → playing (P/SPACE pause) → results`.
-The results screen breaks down coins × 10, obstacles × 5, distance / 10, and TOTAL; SPACE replays, Q quits.
+`menu (SPACE) → calibrate (stand still) → 3·2·1 countdown → playing (P/SPACE pause) → results`.
+The results screen counts up coins × 10, obstacles × 5, distance / 10, combo bonus and TOTAL, and flags a NEW BEST; SPACE replays, Q quits.
 
 ### 5.4 Verification, no webcam needed
 
-Game logic and gesture detection were tested on synthetic input, all passing: collision/scoring for wall (switch lane), JUMP hurdle, DUCK overhang, and coins; Game Over after three hits; and correct lane/jump/duck triggering after calibration.
+`temple_run_demo.py` runs the whole game **without a webcam or YOLO**: a scripted player reacts to the real obstacle stream (so judging, scoring, combo and the results screen all execute), and a synthetic two-keypoint skeleton is fed straight into `GestureDetector`. **21 checks, all passing:**
+
+- **Judging window** — a jump just before *and* just after the crossing clears the hurdle; a stale jump does not; the wrong action costs a life.
+- **Lanes and coins** — blocked lane hits, other lanes are safe, `wall2` has exactly one safe lane, coins score only in their lane, a missed coin is not a penalty.
+- **Scoring** — the multiplier grows on clean play and pays a bonus, a hit resets it, three hits end the run.
+- **Spawning** — hurdles/overhangs always span the corridor; every obstacle kind occurs.
+- **Gestures** — a jump is detected and **never reads as a duck** (and vice versa); the lane threshold gives the same lane at 80/120/200 px shoulder width (distance invariance); standing still stays in the middle lane; losing the body produces no input.
+
+The same run writes `task2_temple_run_preview.png` and `temple_run_shots/` (`--stills`), and a full mp4 with `--video` — a deterministic backup if the live recording goes wrong.
 
 ---
 
@@ -218,6 +250,7 @@ bonus/
 ├── validate_scoring.py       # offline scoring self-checks (no webcam)
 ├── score_timeline.py         # score-vs-time figure (Q15)
 ├── temple_run.py             # motion-controlled Temple Run (Q16)
+├── temple_run_demo.py        # offline self-checks + preview stills/video (Q16)
 └── temple_bg.py              # procedural perspective floor
 ```
 
@@ -229,6 +262,8 @@ python precompute_reference.py dance_example_7   # once per reference video
 python just_dance.py                             # two-panel Just Dance (set REF_NAME first)
 python validate_scoring.py                       # offline scoring checks
 python temple_run.py                             # motion game (Q quit, R recalibrate)
+python temple_run_demo.py                        # 21 offline checks, no webcam
+python temple_run_demo.py --stills               # + refresh the preview PNGs
 ```
 
 Shipped scoring parameters: `ANGLE_TOL=50°`, arm/leg/torso weights `1.5 / 1.2 / 0.6–0.7`, score EMA `α=0.5`, `max_lag=0.6 s`, track window `±0.13 s`, `LIVENESS_STRENGTH=0.9`, foreshorten cutoff `0.15·torso`. Temple Run: `LANE_TH=0.45`, `MOVE_TH=0.34`, `VEL_TH=1.1` shoulder-widths/s.
