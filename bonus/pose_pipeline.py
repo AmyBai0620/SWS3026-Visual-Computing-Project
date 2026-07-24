@@ -223,7 +223,10 @@ def fit_letterbox(frame, box_w, box_h, pad=(0, 0, 0)):
         return np.full((box_h, box_w, 3), pad, np.uint8)
     scale = min(box_w / w, box_h / h)
     nw, nh = max(1, int(round(w * scale))), max(1, int(round(h * scale)))
-    resized = cv2.resize(frame, (nw, nh), interpolation=cv2.INTER_AREA)
+    # INTER_AREA is a downscale filter -- using it to enlarge gives blocky
+    # output, which shows up as soon as a panel is resized bigger than the source.
+    interp = cv2.INTER_AREA if scale < 1.0 else cv2.INTER_LINEAR
+    resized = cv2.resize(frame, (nw, nh), interpolation=interp)
     canvas = np.full((box_h, box_w, 3), pad, np.uint8)
     x0, y0 = (box_w - nw) // 2, (box_h - nh) // 2
     canvas[y0:y0 + nh, x0:x0 + nw] = resized

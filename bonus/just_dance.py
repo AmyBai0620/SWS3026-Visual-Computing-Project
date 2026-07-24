@@ -36,9 +36,21 @@ from pose_score import PoseScorer, TIER_POINTS, scorable
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MODEL = os.path.join(HERE, "yolov8n-pose.pt")
-REF_NAME = "dance_example_7"
+REF_NAME = "dance_example_1"
 
-DISPLAY_W, DISPLAY_H = 360, 640    # portrait reference video
+DISPLAY_W, DISPLAY_H = 360, 640    # starting panel size; both panels then follow
+MIN_DISPLAY = 160                  # never render a panel smaller than this
+HUD_TOP = 0.13                     # panel fraction reserved above the video (tier word)
+HUD_BOT = 0.10                     # ...and below it (score / running average)
+
+# Inference is the pipeline's bottleneck. Measured on this CPU (yolov8n-pose):
+#   imgsz 640 -> 89 ms/frame (11 fps) | 512 -> 83 | 416 -> 72 | 320 -> 56 (18 fps)
+# The camera pushes 30 fps, so the consumer is always the slow side; drop imgsz
+# if you need more headroom, at some cost in keypoint accuracy.
+CAM_IMGSZ = 640
+# Keypoint EMA. Lower = smoother but laggier: the delay is about (1-a)/a frames,
+# so 0.6 costs ~0.7 frames (~60 ms here) and 0.85 costs ~0.2 (~15 ms).
+CAM_SMOOTH = 0.85
 
 TIER_COLORS = {   # BGR
     "PERFECT": (60, 215, 255),     # gold
@@ -46,6 +58,50 @@ TIER_COLORS = {   # BGR
     "GOOD": (240, 180, 60),        # blue
     "X": (150, 150, 150),          # grey
 }
+
+
+class CameraFeed:
+    """Grabber thread that keeps only the newest frame, with its capture time.
+
+    The webcam produces 30 fps but pose inference consumes ~11 fps, so a plain
+    cap.read() loop hands back whatever the driver queued while we were busy:
+    the backlog grows and the frame being scored drifts further and further
+    behind reality (the "half a second" of lag). Grabbing continuously in a
+    thread and keeping just the last frame caps staleness at one camera period.
+    """
+
+    def __init__(self, index=0):
+        self.cap = cv2.VideoCapture(index)
+        self.ok = self.cap.isOpened()
+        try:                                   # honoured by some backends only
+            self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        except cv2.error:
+            pass
+        self._lock = threading.Lock()
+        self._frame = None
+        self._stamp = -1.0
+        self.running = self.ok
+        if self.ok:
+            threading.Thread(target=self._loop, daemon=True).start()
+
+    def _loop(self):
+        while self.running:
+            ok, f = self.cap.read()
+            if not ok:
+                break
+            with self._lock:                   # cap.read() returns a fresh array
+                self._frame, self._stamp = f, time.perf_counter()
+        self.running = False
+
+    def latest(self):
+        """Newest frame and the wall-clock time it was captured."""
+        with self._lock:
+            return self._frame, self._stamp
+
+    def close(self):
+        self.running = False
+        time.sleep(0.05)
+        self.cap.release()
 
 
 def find_ref():
@@ -57,35 +113,46 @@ def find_ref():
     return None, None
 
 
-def draw_hint(frame, text):
-    """Centered prompt, e.g. when the dancer is not fully in frame."""
-    h, w = frame.shape[:2]
-    (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.9, 2)
-    x, y = (w - tw) // 2, h // 2
-    cv2.rectangle(frame, (x - 12, y - th - 12), (x + tw + 12, y + 12), (0, 0, 0), -1)
-    cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
-                (60, 215, 255), 2, cv2.LINE_AA)
-    return frame
+def draw_hud(canvas, y_top, y_bot, hud):
+    """Draw the feedback into the reserved bands, never over the dancer.
 
+    Painting the tier word onto the video meant it landed on the dancer's face,
+    because that is exactly where the head sits in a well-framed shot. The bands
+    above (rows < y_top) and below (rows >= y_bot) the video are ours to use.
+    Font sizes follow the panel width so the HUD stays proportional as the
+    window is resized.
+    """
+    h, w = canvas.shape[:2]
+    hint, tier = hud.get("hint"), hud.get("tier")
 
-def draw_score_overlay(frame, tier, score, running):
-    """Big feedback text + numeric score, Just-Dance style."""
-    h, w = frame.shape[:2]
-    if tier:
-        color = TIER_COLORS[tier]
-        (tw, th), _ = cv2.getTextSize(tier, cv2.FONT_HERSHEY_DUPLEX, 1.6, 3)
-        x = (w - tw) // 2
-        cv2.putText(frame, tier, (x + 2, 70 + 2), cv2.FONT_HERSHEY_DUPLEX,
-                    1.6, (0, 0, 0), 5, cv2.LINE_AA)
-        cv2.putText(frame, tier, (x, 70), cv2.FONT_HERSHEY_DUPLEX,
-                    1.6, color, 3, cv2.LINE_AA)
+    if hint:                                     # a prompt replaces the tier word
+        fs = max(0.45, min(1.0, w / 620.0))
+        (tw, th), _ = cv2.getTextSize(hint, cv2.FONT_HERSHEY_SIMPLEX, fs, 2)
+        cv2.putText(canvas, hint, ((w - tw) // 2, (y_top + th) // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX, fs, (60, 215, 255), 2, cv2.LINE_AA)
+    elif tier:
+        fs = max(0.8, min(2.4, w / 300.0))
+        (tw, th), _ = cv2.getTextSize(tier, cv2.FONT_HERSHEY_DUPLEX, fs, 3)
+        x, by = (w - tw) // 2, (y_top + th) // 2
+        cv2.putText(canvas, tier, (x + 2, by + 2), cv2.FONT_HERSHEY_DUPLEX,
+                    fs, (0, 0, 0), 5, cv2.LINE_AA)
+        cv2.putText(canvas, tier, (x, by), cv2.FONT_HERSHEY_DUPLEX,
+                    fs, TIER_COLORS[tier], 3, cv2.LINE_AA)
+
+    band = h - y_bot
+    score, running = hud.get("score"), hud.get("running")
     if score is not None:
-        cv2.putText(frame, f"{score:4.0f}", (w - 120, h - 20),
-                    cv2.FONT_HERSHEY_DUPLEX, 1.2, (255, 255, 255), 2, cv2.LINE_AA)
+        fs = max(0.6, min(1.8, w / 400.0))
+        s = f"{score:.0f}"
+        (tw, th), _ = cv2.getTextSize(s, cv2.FONT_HERSHEY_DUPLEX, fs, 2)
+        cv2.putText(canvas, s, (w - tw - 14, y_bot + (band + th) // 2),
+                    cv2.FONT_HERSHEY_DUPLEX, fs, (255, 255, 255), 2, cv2.LINE_AA)
     if running is not None:
-        cv2.putText(frame, f"avg {running:4.0f}", (12, h - 20),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-    return frame
+        fs = max(0.4, min(0.9, w / 700.0))
+        s = f"avg {running:.0f}"
+        (tw, th), _ = cv2.getTextSize(s, cv2.FONT_HERSHEY_SIMPLEX, fs, 1)
+        cv2.putText(canvas, s, (14, y_bot + (band + th) // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX, fs, (235, 235, 235), 1, cv2.LINE_AA)
 
 
 class JustDanceApp:
@@ -111,29 +178,53 @@ class JustDanceApp:
         self.tracker_cam = PoseTracker(MODEL)
         self.running_cam = False
         self.dance_active = False
-        self.t_play = 0.0            # current reference time, drives scoring
+        self.t_play = 0.0            # current reference time (display only)
         self.speed = 1.0            # reference playback speed (set at Start Dance)
+        self.play_t0 = None          # wall clock at which the dance started
+        self.play_speed = 1.0
         self.speed_var = tk.StringVar(value="1.0x")
 
         self.q = queue.Queue(maxsize=4)
 
-        # layout
-        left = tk.Frame(root); left.pack(side=tk.LEFT, padx=8, pady=6)
-        right = tk.Frame(root); right.pack(side=tk.RIGHT, padx=8, pady=6)
-        tk.Label(left, text="Reference").pack()
-        self.label_ref = tk.Label(left); self.label_ref.pack()
-        tk.Label(right, text="You").pack()
-        self.label_cam = tk.Label(right); self.label_cam.pack()
+        # Panel size follows the window. The worker threads read these two ints
+        # when they letterbox a frame, so resizing needs no restart.
+        self.disp_w, self.disp_h = DISPLAY_W, DISPLAY_H
 
-        ctrl = tk.Frame(root); ctrl.place(relx=0.5, rely=0.97, anchor="s")
-        tk.Button(ctrl, text="Start Webcam", command=self.start_cam).pack(side=tk.LEFT, padx=4)
-        tk.Button(ctrl, text="Start Dance", command=self.start_dance).pack(side=tk.LEFT, padx=4)
-        tk.Button(ctrl, text="Stop Dance", command=self.stop_dance).pack(side=tk.LEFT, padx=4)
-        tk.Label(ctrl, text="Speed").pack(side=tk.LEFT, padx=(10, 2))
-        tk.OptionMenu(ctrl, self.speed_var, "1.0x", "0.75x", "0.5x").pack(side=tk.LEFT)
+        # layout: controls pinned to the bottom, two equal panels filling the rest
+        ctrl = tk.Frame(root)
+        ctrl.pack(side=tk.BOTTOM, fill=tk.X, pady=6)
+        inner = tk.Frame(ctrl); inner.pack()
+        tk.Button(inner, text="Start Webcam", command=self.start_cam).pack(side=tk.LEFT, padx=4)
+        tk.Button(inner, text="Start Dance", command=self.start_dance).pack(side=tk.LEFT, padx=4)
+        tk.Button(inner, text="Stop Dance", command=self.stop_dance).pack(side=tk.LEFT, padx=4)
+        tk.Label(inner, text="Speed").pack(side=tk.LEFT, padx=(10, 2))
+        tk.OptionMenu(inner, self.speed_var, "1.0x", "0.75x", "0.5x").pack(side=tk.LEFT)
 
+        body = tk.Frame(root)
+        body.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        # grid_propagate off breaks the feedback loop "bigger image -> label asks
+        # for more room -> window grows -> bigger image"; the cells are sized by
+        # the window alone, and uniform= keeps the two panels identical.
+        body.grid_propagate(False)
+        body.columnconfigure(0, weight=1, uniform="panel")
+        body.columnconfigure(1, weight=1, uniform="panel")
+        body.rowconfigure(1, weight=1)
+        tk.Label(body, text="Reference").grid(row=0, column=0)
+        tk.Label(body, text="You").grid(row=0, column=1)
+        self.label_ref = tk.Label(body, bg="black")
+        self.label_ref.grid(row=1, column=0, sticky="nsew", padx=6, pady=(0, 4))
+        self.label_cam = tk.Label(body, bg="black")
+        self.label_cam.grid(row=1, column=1, sticky="nsew", padx=6, pady=(0, 4))
+        # one panel is enough to watch: uniform columns make them the same size
+        self.label_ref.bind("<Configure>", self._on_panel_resize)
+
+        self.root.minsize(480, 380)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self._pump()
+
+    def _on_panel_resize(self, ev):
+        self.disp_w = max(MIN_DISPLAY, ev.width)
+        self.disp_h = max(MIN_DISPLAY, ev.height)
 
     # ---------------- controls ----------------
     def start_cam(self):
@@ -167,6 +258,7 @@ class JustDanceApp:
         fps = self.ref_fps
         speed = max(0.1, self.speed)   # <1 = slow motion, so a learner can keep up
         start = time.perf_counter()
+        self.play_t0, self.play_speed = start, speed   # the clock scoring aligns to
         pos = 0                        # index of the next frame to show
         while self.dance_active and pos < n:
             # Wall-clock time this frame is due. Without this wait the loop --
@@ -195,7 +287,23 @@ class JustDanceApp:
                 pos += 1
         cap.release()
         self.dance_active = False
+        self.play_t0 = None
         self._show_summary()
+
+    def ref_time_at(self, t_cap):
+        """Reference time matching a webcam frame *captured* at t_cap.
+
+        Scoring used to compare against self.t_play -- where the reference is
+        right now -- even though the frame had already spent an inference time
+        in the pipeline. That pits "you, 150 ms ago" against "the reference,
+        now", and the scorer quietly absorbs the difference into its human-lag
+        estimate, biasing every frame. Deriving the target from the capture
+        stamp takes the pipeline delay out of the alignment completely.
+        """
+        t0 = self.play_t0
+        if t0 is None:
+            return self.t_play
+        return float(np.clip((t_cap - t0) * self.play_speed, 0.0, float(self.ref_t[-1])))
 
     # ---------------- webcam + scoring ----------------
     def webcam_loop(self):
@@ -214,18 +322,21 @@ class JustDanceApp:
                           color_line=(0, 255, 255), color_point=(0, 0, 255)) \
                 if res.found else None
 
+            # The feedback is no longer painted onto the frame: it is handed to
+            # _emit, which draws it in the bands around the video (see draw_hud).
             body_ok = res.found and scorable(res.valid)
+            hud = None
             if self.dance_active:
                 if body_ok:
                     r = self.scorer.update(res.xy, res.valid, self.t_play)
-                    run = self.scorer.summary()["mean"]
-                    draw_score_overlay(frame, r["tier"], r["score"], run)
+                    hud = dict(tier=r["tier"], score=r["score"],
+                               running=self.scorer.summary()["mean"])
                 else:
                     self.scorer.update(None, None, self.t_play)
-                    draw_hint(frame, "STEP BACK - show your whole body")
+                    hud = dict(hint="STEP BACK - show your whole body")
             elif not body_ok:
-                draw_hint(frame, "Step back so your whole body is visible")
-            self._emit(self.label_cam, frame)
+                hud = dict(hint="Step back so your whole body is visible")
+            self._emit(self.label_cam, frame, hud)
         cap.release()
 
     def _show_summary(self):
@@ -242,9 +353,21 @@ class JustDanceApp:
         self.root.after(0, lambda: messagebox.showinfo("Dance finished", msg))
 
     # ---------------- Tk plumbing ----------------
-    def _emit(self, label, frame_bgr):
-        fitted = fit_letterbox(frame_bgr, DISPLAY_W, DISPLAY_H)
-        rgb = cv2.cvtColor(fitted, cv2.COLOR_BGR2RGB)
+    def _emit(self, label, frame_bgr, hud=None):
+        # Reserve a band above and below the video for the HUD instead of
+        # relying on whatever letterbox bars the aspect ratio happens to leave:
+        # a panel that matches the video aspect would leave none at all. Both
+        # panels reserve the same bands, so the two dancers stay the same size
+        # and line up vertically.
+        w, h = self.disp_w, self.disp_h
+        top = int(min(96, max(34, h * HUD_TOP)))
+        bot = int(min(76, max(28, h * HUD_BOT)))
+        inner = max(40, h - top - bot)
+        canvas = np.zeros((h, w, 3), np.uint8)
+        canvas[top:top + inner] = fit_letterbox(frame_bgr, w, inner)
+        if hud:
+            draw_hud(canvas, top, top + inner, hud)
+        rgb = cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB)
         img = Image.fromarray(rgb)
         try:
             self.q.put_nowait((label, img))
