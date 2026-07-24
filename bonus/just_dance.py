@@ -175,7 +175,7 @@ class JustDanceApp:
         self.ref_video = vid
         self.scorer = PoseScorer(self.ref_xy, self.ref_valid, self.ref_t)
 
-        self.tracker_cam = PoseTracker(MODEL)
+        self.tracker_cam = PoseTracker(MODEL, imgsz=CAM_IMGSZ, smooth_alpha=CAM_SMOOTH)
         self.running_cam = False
         self.dance_active = False
         self.t_play = 0.0            # current reference time (display only)
@@ -332,17 +332,18 @@ class JustDanceApp:
             body_ok = res.found and scorable(res.valid)
             hud = None
             if self.dance_active:
+                t_ref = self.ref_time_at(stamp)   # align to when this frame was shot
                 if body_ok:
-                    r = self.scorer.update(res.xy, res.valid, self.t_play)
+                    r = self.scorer.update(res.xy, res.valid, t_ref)
                     hud = dict(tier=r["tier"], score=r["score"],
                                running=self.scorer.summary()["mean"])
                 else:
-                    self.scorer.update(None, None, self.t_play)
+                    self.scorer.update(None, None, t_ref)
                     hud = dict(hint="STEP BACK - show your whole body")
             elif not body_ok:
                 hud = dict(hint="Step back so your whole body is visible")
             self._emit(self.label_cam, frame, hud)
-        cap.release()
+        feed.close()
 
     def _show_summary(self):
         s = self.scorer.summary()
